@@ -66,7 +66,6 @@ exports.convertToXml = function (json, options) {
       [OPENING, SELF_CLOSING].includes(tagType) ||
       ([CLOSING].includes(tagType) && CAN_CREATE_CHILDREN_TAGS)
     ) {
-      console.log(tagName, level)
       xmlString += indentHelper(SPACE, level);
     }
 
