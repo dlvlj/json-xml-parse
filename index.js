@@ -34,7 +34,7 @@ exports.convertToXml = function (json, options) {
 
     if (!HAS_CHILDREN) {
       addTag(tagName, "self-closing", {
-        attributes
+        attributes, level
       });
       return;
     }
@@ -66,6 +66,7 @@ exports.convertToXml = function (json, options) {
       [OPENING, SELF_CLOSING].includes(tagType) ||
       ([CLOSING].includes(tagType) && CAN_CREATE_CHILDREN_TAGS)
     ) {
+      console.log(tagName, level)
       xmlString += indentHelper(SPACE, level);
     }
 
