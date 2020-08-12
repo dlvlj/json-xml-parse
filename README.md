@@ -42,12 +42,12 @@ const jsonData = {
         }
       },
       family: {
-        mother: 'mother name',
+        mother: () => "mother's name",
         father: {
-          '_value': 'father"s name',
+          '_value': () => "father's name",
           '_attrs': {
             age: 50,
-            gender: 'male'
+            gender: () => 'male'
           }
         },
         siblings: ''
@@ -74,8 +74,8 @@ console.log(xml);
   <SOAP-ENV:Body xmlns:m="http://www.xyz.org/quotations">
    <m:Person gender="male" age="25">Divij</m:Person>
    <family>
-    <mother>mother name</mother>
-    <father age="50" gender="male">father&quot;s name</father>
+    <mother>mother&apos;s name</mother>
+    <father age="50" gender="male">father&apos;s name</father>
     <siblings/>
    </family>
    <ENTITIES>

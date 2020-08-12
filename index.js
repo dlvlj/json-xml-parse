@@ -126,7 +126,7 @@ exports.jsToXml = function (json, options) {
   }
 
   function isObj(val) {
-    return typeof val === "object" && !isFunc(val);
+    return typeof val === "object";
   }
 
   function isFunc(val) {
