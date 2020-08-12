@@ -1,5 +1,5 @@
 Transform JSON/JS to xml.
-##### [Contribute](https://github.com/divijhardwaj/js-xml-parser) to make this project better.
+##### [Contribute](https://github.com/divijhardwaj/json-xml-parse) to make this project better.
 
 ##### Main Features
 * Transform JSON to XML.
