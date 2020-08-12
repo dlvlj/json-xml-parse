@@ -1,16 +1,18 @@
 {
   "name": "json-xml-parse",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "js-xml-parser",
+    "json-xml-parse",
+    "json-xml-parser",
     "json-to-xml",
-    "js-to-xml",
-    "xml-parser"
+    "json-to-xml-parser",
+    "xml-parser",
+    "parse-xml"
   ],
   "license": "BSD-3-Clause"
 }
