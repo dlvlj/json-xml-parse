@@ -6,6 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "keywords": [
+    "js-xml-parser",
+    "json-to-xml",
+    "js-to-xml",
+    "xml-parser"
+  ],
   "license": "BSD-3-Clause"
 }
