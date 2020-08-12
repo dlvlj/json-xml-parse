@@ -1,5 +1,5 @@
 {
-  "name": "convert-json-to-xml",
+  "name": "js-xml-parser",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,5 +7,5 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "BSD-3-Clause"
 }

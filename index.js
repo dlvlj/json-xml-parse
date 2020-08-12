@@ -1,8 +1,8 @@
-exports.convertToXml = function (json, options) {
+exports.jsToXml = function (json, options) {
   const jsonData = json;
   const INDENT = options ? Boolean(options.indent) : false;
-  const ATTRIBUTES = options ? options.attrProperty : '';
-  const VALUE = options ? options.valProperty : '';
+  const ATTRIBUTES = options ? options.attribute : '';
+  const VALUE = options ? options.value : '';
   const ENTITIES = {
     "<": "&lt;",
     ">": "&gt;",
@@ -73,7 +73,7 @@ exports.convertToXml = function (json, options) {
     tagType === CLOSING && (xmlString += `</${tagName}>`);
     tagType === SELF_CLOSING &&
       (xmlString += `<${tagName}${setAttributes(attributes)}/>`);
-    value && (xmlString = xmlString + `${isFunc(value) ? value() : value}`);
+    value && (xmlString = xmlString + `${setValue(value)}`);
 
     // for  indent
     if ([CLOSING, SELF_CLOSING].includes(tagType)) {
@@ -104,14 +104,25 @@ exports.convertToXml = function (json, options) {
     return attrString;
   }
 
+  function setValue(value) {
+    let val = isFunc(value) ? value() : value;
+    if (isStr(val)) {
+      val = entityHelper(val)
+    }
+    return `${val}`;
+  }
   function attrValue(attr) {
     let val = isFunc(attr) ? attr() : attr;
     if (isStr(val)) {
-      val = val.replace(/<|>|&|"|'/gi, function (matched) {
-        return ENTITIES[matched];
-      });
+      val = entityHelper(val)
     }
     return `"${val}"`;
+  }
+
+  function entityHelper(str) {
+    return str.replace(/<|>|&|"|'/gi, function (matched) {
+      return ENTITIES[matched];
+    });
   }
 
   function isObj(val) {
