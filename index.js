@@ -14,7 +14,7 @@ exports.convertToXml = function (json, options) {
   const NEW_LINE = "\n";
   let xmlString = "";
 
-  // JSON TO XML LOGIC ------------------------------------------------------
+  // JSON TO XML LOGIC 
   xmlString = `<?xml version="1.0" encoding="UTF-8"?>${indentHelper(NEW_LINE)}`;
 
   for (tagName in jsonData) {
@@ -54,7 +54,7 @@ exports.convertToXml = function (json, options) {
   }
 
 
-  // UTILITY FUNCTIONS ----------------------------------------------
+  // UTILITY FUNCTIONS
   function addTag(tagName, tagType, options = {}) {
     const OPENING = "opening";
     const CLOSING = "closing";
