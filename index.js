@@ -1,10 +1,8 @@
 exports.convertToXml = function (json, options) {
   const jsonData = json;
   const INDENT = options ? Boolean(options.indent) : false;
-  const SPACE = " ";
-  const NEW_LINE = "\n";
-  const ATTRIBUTES = "_attrs";
-  const VALUE = "_value";
+  const ATTRIBUTES = options ? options.attrProperty : '';
+  const VALUE = options ? options.valProperty : '';
   const ENTITIES = {
     "<": "&lt;",
     ">": "&gt;",
@@ -12,6 +10,8 @@ exports.convertToXml = function (json, options) {
     '"': "&quot;",
     "'": "&apos;"
   };
+  const SPACE = " ";
+  const NEW_LINE = "\n";
   let xmlString = "";
 
   // JSON TO XML LOGIC ------------------------------------------------------
@@ -43,7 +43,6 @@ exports.convertToXml = function (json, options) {
 
     if (CAN_CREATE_CHILDREN_TAGS) {
       xmlString += indentHelper(NEW_LINE); // for  indent
-
       for (childTagName in tagData) {
         createTag(childTagName, tagData[childTagName], level + 1);
       }
