@@ -12,11 +12,11 @@ Transform JSON/JS to xml.
 
 ## How to use
 ***
-`$npm install js-xml-parser`
+`$npm install json-xml-parse`
 
 ##### JSON/JS Object TO XML
 ```js
-import { jsToXml } from 'js-xml-parser';
+import { jsToXml } from 'json-xml-parse';
 
 const options = {
     indent: true,
