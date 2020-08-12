@@ -85,7 +85,7 @@ exports.jsToXml = function (json, options) {
     //CHILDREN CAN BE VALUE OR NESTED TAGS BUT NOT ATTRIBUTES
     return isObj(tagData)
       ? Object.keys(tagData).some((tag) => ![ATTRIBUTES].includes(tag))
-      : tagData;
+      : isFunc(tagData) ? tagData() : tagData;
   }
 
   function canCreateChildrenTags(tagData) {
