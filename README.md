@@ -63,7 +63,7 @@ const jsonData = {
   }
 };
 
-const xml = jsToXml(test, { indent: true, attribute: '_attrs', value: '_value' });
+const xml = jsToXml(test, options);
 console.log(xml);
 ```
 
