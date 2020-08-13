@@ -1,5 +1,5 @@
 Transform JSON/JS to xml.
-##### [Contribute](https://github.com/divijhardwaj/json-xml-parse) to make this project better.
+#### [Contribute](https://github.com/divijhardwaj/json-xml-parse) to make this project better.
 
 ##### Main Features
 * Transform JSON to XML.
@@ -63,7 +63,7 @@ const jsonData = {
   }
 };
 
-const xml = jsToXml(test, options);
+const xml = jsToXml(jsonData, options);
 console.log(xml);
 ```
 
