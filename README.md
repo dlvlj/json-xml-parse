@@ -2,16 +2,17 @@ Transform JSON/JS to xml.
 #### [Contribute](https://github.com/divijhardwaj/json-xml-parse) to make this project better.
 
 ##### Main Features
-* Transform JSON to XML.
+* Transform JSON to XML fast.
 * Works with node packages, in browser, and in CLI.
 * It can handle deeply nested JSON Objects.
+* children/content property in JSON is not required for nesting tags. Any property in JSON which is not attribute property or value is treated as child tag.
+* small package size.
 * Options Available for customization
-    * You can indent your xml data.
-    * You can choose the attribute and value property(JSON) that contains attributs and value for a tag respectively.
-* Does not require any content property in JSON for nesting tags. Any property in JSON which is not attribute is or value is treated as childen tag or tags.
+    * indent your xml data.
+    * choose the **attribute** and **value** property(JSON) that contain attributes and value for a tag respectively.
 
 ## How to use
-***
+
 `$npm install json-xml-parse`
 
 ##### JSON/JS Object TO XML
@@ -90,11 +91,9 @@ console.log(xml);
 ```
 
 **Options**
-* **indent**. Boolean, for indentation of transformed XML data.
-* **attribute**. String, for picking attributes of tags from the JSON using the property name passed here.
-* **value**. String, for picking value of tags from the JSON using the property name passed here.
+* **indent**. Boolean. For indentation of transformed XML data.
+* **attribute**. String. For picking attributes of tags from the JSON using the property name passed here.
+* **value**. String. For picking value of tags from the JSON using the property name passed here.
 
 **Limitations**
-* Nested tags are created using recursion, so it lacks Tail Call Optimization.
 * Not tested with large JSON data.
-* Currently this package does not support flat JSON as an input.
