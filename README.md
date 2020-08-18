@@ -1,7 +1,7 @@
 Transform JSON/JS to xml.
 #### [Contribute](https://github.com/divijhardwaj/json-xml-parse) to make this project better.
 
-##### Main Features
+#### Main Features
 * Transform JSON to XML fast.
 * Works with node packages, in browser, and in CLI.
 * It can handle deeply nested JSON Objects.
