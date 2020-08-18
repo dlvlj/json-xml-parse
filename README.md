@@ -5,7 +5,7 @@ Transform JSON/JS to xml.
 * Transform JSON to XML fast.
 * Works with node packages, in browser, and in CLI.
 * It can handle deeply nested JSON Objects.
-* children/content property in JSON is not required for nesting tags. Any property in JSON which is not attribute property or value is treated as child tag.
+* children/content property in JSON is not required for nesting tags. Any property in JSON which is not attribute or value is treated as child tag.
 * small package size.
 * Options Available for customization
     * indent your xml data.
@@ -94,6 +94,3 @@ console.log(xml);
 * **indent**. Boolean. For indentation of transformed XML data.
 * **attribute**. String. For picking attributes of tags from the JSON using the property name passed here.
 * **value**. String. For picking value of tags from the JSON using the property name passed here.
-
-**Limitations**
-* Not tested with large JSON data.
