@@ -73,7 +73,7 @@ exports.jsToXml = function (json, options) {
     tagType === CLOSING && (xmlString += `</${tagName}>`);
     tagType === SELF_CLOSING &&
       (xmlString += `<${tagName}${setAttributes(attributes)}/>`);
-    value && (xmlString = xmlString + `${setValue(value)}`);
+    (value || value === 0) && (xmlString = xmlString + `${setValue(value)}`);
 
     // for  indent
     if ([CLOSING, SELF_CLOSING].includes(tagType)) {
@@ -83,9 +83,10 @@ exports.jsToXml = function (json, options) {
 
   function hasChildren(tagData) {
     //CHILDREN CAN BE VALUE OR NESTED TAGS BUT NOT ATTRIBUTES
-    return isObj(tagData)
+    const result = isObj(tagData)
       ? Object.keys(tagData).some((tag) => ![ATTRIBUTES].includes(tag))
       : isFunc(tagData) ? tagData() : tagData;
+    return result === 0 ? true : result;
   }
 
   function canCreateChildrenTags(tagData) {
