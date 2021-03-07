@@ -39,12 +39,11 @@ const jsonData = {
       '_attrs': {
         'xmlns:m': 'http://www.xyz.org/quotations'
       },
-      name: undefined,
       'm:Person': {
-        '_text': undefined,
+        '_text': 'example',
         '_attrs': {
           gender: 'male',
-          age: 25
+          age: 1000
         }
       },
       family: {
@@ -56,14 +55,36 @@ const jsonData = {
             gender: () => 'male'
           }
         },
+        family: {
+          mother: () => "mother's name",
+          father: {
+            '_text': () => "father's name",
+            '_attrs': {
+              age: 50,
+              gender: () => 'male'
+            }
+          },
+          family: {
+            mother: () => "mother's name",
+            father: {
+              '_text': () => "father's name",
+              '_attrs': {
+                age: 50,
+                gender: () => 'male'
+              }
+            },
+            siblings: ''
+          },
+          siblings: ''
+        },
         siblings: ''
       },
       ENTITIES: {
         LessThan: 'this < that',
         GreaterThan: 'this > that',
-        Amp: 'something & something',
+        Amp: 'conditon && something',
         Quot: '"Nice"',
-        Apos: "Divij's Birthday"
+        Apos: "Dave's"
       }
     }
   }
@@ -81,6 +102,16 @@ const xml = parser.toXml(jsonData, options);
    <family>
     <mother>mother&apos;s name</mother>
     <father age="50" gender="male">father&apos;s name</father>
+    <family>
+     <mother>mother&apos;s name</mother>
+     <father age="50" gender="male">father&apos;s name</father>
+     <family>
+      <mother>mother&apos;s name</mother>
+      <father age="50" gender="male">father&apos;s name</father>
+      <siblings></siblings>
+     </family>
+     <siblings></siblings>
+    </family>
     <siblings></siblings>
    </family>
    <ENTITIES>
