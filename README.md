@@ -1,5 +1,5 @@
 Transform JSON/JS to xml.
-#### [Contribute](https://github.com/divijhardwaj/json-xml-parse) to make this project better.
+#### [GitHub](https://github.com/divijhardwaj/json-xml-parse)
 
 #### Main Features
 * Transform JSON to XML fast.
@@ -7,22 +7,26 @@ Transform JSON/JS to xml.
 * It can handle deeply nested JSON Objects.
 * children/content property in JSON is not required for nesting tags. Any property in JSON which is not attribute or value is treated as child tag.
 * small package size.
-* Options Available for customization
-    * indent your xml data.
-    * choose the **attribute** and **value** property(JSON) that contain attributes and value for a tag respectively.
 
-## How to use
+## Installation
 
 `$npm install json-xml-parse`
 
-##### JSON/JS Object TO XML
+## How to use
 ```js
-import { jsToXml } from 'json-xml-parse';
+const parser = require('json-xml-parse');
 
 const options = {
     indent: true,
-    attribute: '_attrs',
-    value: '_value'
+    attrsNode: '_attrs',
+    textNode: '_text',
+    entities: {
+      '<': '&lt;',
+      '>': '&gt;',
+      '&': '&amp;',
+      '"': '&quot;',
+      "'": '&apos;',
+    }
 }
 
 const jsonData = {
@@ -35,8 +39,9 @@ const jsonData = {
       '_attrs': {
         'xmlns:m': 'http://www.xyz.org/quotations'
       },
+      name: undefined,
       'm:Person': {
-        '_value': 'Divij',
+        '_text': undefined,
         '_attrs': {
           gender: 'male',
           age: 25
@@ -45,7 +50,7 @@ const jsonData = {
       family: {
         mother: () => "mother's name",
         father: {
-          '_value': () => "father's name",
+          '_text': () => "father's name",
           '_attrs': {
             age: 50,
             gender: () => 'male'
@@ -64,8 +69,7 @@ const jsonData = {
   }
 };
 
-const xml = jsToXml(jsonData, options);
-console.log(xml);
+const xml = parser.toXml(jsonData, options);
 ```
 
 **OUTPUT**
@@ -73,24 +77,25 @@ console.log(xml);
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://www.w3.org/2001/12/soap-envelope" SOAP-ENV:encodingStyle="http://www.w3.org/2001/12/soap-encoding">
   <SOAP-ENV:Body xmlns:m="http://www.xyz.org/quotations">
-   <m:Person gender="male" age="25">Divij</m:Person>
+   <m:Person gender="male" age="1000">example</m:Person>
    <family>
     <mother>mother&apos;s name</mother>
     <father age="50" gender="male">father&apos;s name</father>
-    <siblings/>
+    <siblings></siblings>
    </family>
    <ENTITIES>
     <LessThan>this &lt; that</LessThan>
     <GreaterThan>this &gt; that</GreaterThan>
-    <Amp>something &amp; something</Amp>
+    <Amp>conditon &amp;&amp; something</Amp>
     <Quot>&quot;Nice&quot;</Quot>
-    <Apos>Divij&apos;s Birthday</Apos>
+    <Apos>Dave&apos;s</Apos>
    </ENTITIES>
   </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
 ```
 
 **Options**
-* **indent**. Boolean. For indentation of transformed XML data.
-* **attribute**. String. For picking attributes of tags from the JSON using the property name passed here.
-* **value**. String. For picking value of tags from the JSON using the property name passed here.
+* **indent** - Boolean. For indentation of transformed XML String.
+* **attrsNode** - String. For attributes of a tag.
+* **textNode** - String. For text inside tag.
+* **entities** - Object. For replacing entities. 
