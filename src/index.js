@@ -26,19 +26,20 @@ class Parser {
       this.ENTITIES = { ...options.entities };
     }
 
-    this.xmlStr = `${XML_START_STRING}${this.#indentXml(NEW_LINE)}`;
+    this.xmlStr = `${XML_START_STRING}${this.#formatXml(NEW_LINE)}`;
     
     Object.keys(this.json).forEach((tagName) => {
-      this.#handleNode(tagName, this.json[tagName], 0);
+      this.#handleJSON(tagName, this.json[tagName], 0);
     });
 
     return this.xmlStr;
   }
 
-  #indentXml(char, lvl = 0) {
+  #formatXml(char, lvl = 0) {
     if (!this.indent) {
       return '';
     }
+
     let str = char;
 
     if (str === SPACE) {
@@ -47,17 +48,18 @@ class Parser {
       }
       return lvl ? str : '';
     }
+
     return str;
   }
 
-  #handleNode(tagName, tagData, lvl) {
+  #handleJSON(tagName, tagData, lvl) {
     if ([this.attrProp, this.txtProp].includes(tagName)) {
       return;
     }
 
     const text = isObj(tagData) ? tagData[this.txtProp] : tagData;
     const attrs = tagData ? tagData[this.attrProp] : null;
-    const hasChildrenTags = this.#hasChildrenTags(tagData);
+    const hasChildTags = this.#hasChildTags(tagData);
 
     if (!this.#hasData(tagData)) {
       this.#createTag(tagName, TAGS.SELF_CLOSING, {
@@ -68,19 +70,19 @@ class Parser {
 
     this.#createTag(tagName, TAGS.OPENING, { attrs, lvl });
 
-    if (hasChildrenTags) {
-      this.xmlStr += this.#indentXml(NEW_LINE);
+    if (hasChildTags) {
+      this.xmlStr += this.#formatXml(NEW_LINE);
       Object.keys(tagData).forEach((childTagName) => {
-        this.#handleNode(childTagName, tagData[childTagName], lvl + 1);
+        this.#handleJSON(childTagName, tagData[childTagName], lvl + 1);
       });
     } else {
       this.#createTag(null, null, { text });
     }
 
-    this.#createTag(tagName, TAGS.CLOSING, { lvl, hasChildrenTags });
+    this.#createTag(tagName, TAGS.CLOSING, { lvl, hasChildTags });
   }
 
-  #hasChildrenTags(tagData) {
+  #hasChildTags(tagData) {
     return (isObj(tagData)
       ? Object.keys(tagData).some((tagName) => ![this.attrProp, this.txtProp].includes(tagName))
       : false);
@@ -88,13 +90,13 @@ class Parser {
 
   #createTag(name, type, op = {}) {
     const {
-      text, attrs, lvl, hasChildrenTags,
+      text, attrs, lvl, hasChildTags,
     } = op;
     if (
       [TAGS.OPENING, TAGS.SELF_CLOSING].includes(type)
-      || ([TAGS.CLOSING].includes(type) && hasChildrenTags)
+      || ([TAGS.CLOSING].includes(type) && hasChildTags)
     ) {
-      this.xmlStr += this.#indentXml(SPACE, lvl);
+      this.xmlStr += this.#formatXml(SPACE, lvl);
     }
 
     if (type === TAGS.OPENING) {
@@ -110,7 +112,7 @@ class Parser {
       this.xmlStr += `${this.#getVal(text)}`;
     }
     if ([TAGS.CLOSING, TAGS.SELF_CLOSING].includes(type)) {
-      this.xmlStr += this.#indentXml(NEW_LINE);
+      this.xmlStr += this.#formatXml(NEW_LINE);
     }
   }
 
@@ -127,8 +129,8 @@ class Parser {
   }
 
   #handleEntities(str) {
-    const reg = RegExp(Object.keys(this.ENTITIES).join('|'), 'gi');
-    return str.replace(reg, (matched) => this.ENTITIES[matched] || '');
+    const regex = RegExp(Object.keys(this.ENTITIES).join('|'), 'gi');
+    return str.replace(regex, (matched) => this.ENTITIES[matched] || '');
   }
 
   #getVal(value, quotes = false) {
@@ -141,11 +143,13 @@ class Parser {
 
   #getAttrs(attrs) {
     let attrStr = '';
+
     if (attrs) {
       Object.keys(attrs).forEach((attr) => {
         attrStr += ` ${attr}=${this.#getVal(attrs[attr], true)}`;
       });
     }
+    
     return attrStr;
   }
 }
