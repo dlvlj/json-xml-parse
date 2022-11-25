@@ -1,5 +1,7 @@
 const INVALID_JSON_DATA = (v) => `required input type JSON. Got ${typeof v}.`
 
+const XML_START_STRING = '<?xml version="1.0" encoding="UTF-8"?>';
+
 const SPACE = ' ';
 
 const NEW_LINE = '\n';
@@ -22,5 +24,6 @@ module.exports = {
   NEW_LINE,
   TAGS,
   OPTIONS,
-  INVALID_JSON_DATA
+  INVALID_JSON_DATA,
+  XML_START_STRING
 }

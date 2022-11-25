@@ -1,5 +1,5 @@
 const { isObj, isFunc, isStr } = require('../utils');
-const { SPACE, NEW_LINE, TAGS, OPTIONS, INVALID_JSON_DATA } = require('../utils/constants')
+const { SPACE, NEW_LINE, TAGS, OPTIONS, INVALID_JSON_DATA, XML_START_STRING } = require('../utils/constants')
 
 class Parser {
   constructor() {
@@ -16,17 +16,22 @@ class Parser {
       console.error(INVALID_JSON_DATA(data));
       return this.xmlStr;
     }
+
     this.json = data || {};
+
     if (options) {
       this.indent = Boolean(options[OPTIONS.indent]) || false;
       this.attrProp = String(options[OPTIONS.attrProp]) || '';
       this.txtProp = String(options[OPTIONS.txtProp]) || '';
       this.ENTITIES = { ...options.entities };
     }
-    this.xmlStr = `<?xml version="1.0" encoding="UTF-8"?>${this.#indentXml(NEW_LINE)}`;
+
+    this.xmlStr = `${XML_START_STRING}${this.#indentXml(NEW_LINE)}`;
+    
     Object.keys(this.json).forEach((tagName) => {
       this.#handleNode(tagName, this.json[tagName], 0);
     });
+
     return this.xmlStr;
   }
 
