@@ -8,15 +8,10 @@
   "keywords": [
     "json",
     "xml",
-    "js2xml",
-    "json2xml",
     "jsonToXml",
     "json-xml-parse",
-    "json-xml-parser",
     "json-to-xml",
-    "json-to-xml-parser",
-    "xml-parser",
-    "parse-xml"
+    "json-to-xml-parser"
   ],
   "license": "BSD-3-Clause",
   "devDependencies": {
