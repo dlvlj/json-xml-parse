@@ -1,18 +1,20 @@
-Transform JSON/JS to xml.
-#### [GitHub](https://github.com/divijhardwaj/json-xml-parse)
+# Transform JSON to xml
 
-#### Main Features
-* Transform JSON to XML fast.
-* Works with node packages, in browser, and in CLI.
-* It can handle deeply nested JSON Objects.
-* children/content property in JSON is not required for nesting tags. Any property in JSON which is not attribute or value is treated as child tag.
-* small package size.
+## [GitHub](https://github.com/divijhardwaj/json-xml-parse)
 
 ## Installation
 
 `$npm install json-xml-parse`
 
+## Main Features
+
+* Transform JSON to XML.
+* Works in CLI and Browser.
+* Handels nested JSON Objects.
+* small package size.
+
 ## How to use
+
 ```js
 const parser = require('json-xml-parse');
 
@@ -93,7 +95,8 @@ const jsonData = {
 const xml = parser.toXml(jsonData, options);
 ```
 
-**OUTPUT**
+## OUTPUT
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://www.w3.org/2001/12/soap-envelope" SOAP-ENV:encodingStyle="http://www.w3.org/2001/12/soap-encoding">
@@ -125,8 +128,9 @@ const xml = parser.toXml(jsonData, options);
 </SOAP-ENV:Envelope>
 ```
 
-**Options**
+## Options
+
 * **indent** - Boolean. For indentation of transformed XML String.
 * **attrsNode** - String. For attributes of a tag.
 * **textNode** - String. For text inside tag.
-* **entities** - Object. For replacing entities. 
+* **entities** - Object. For replacing entities.
