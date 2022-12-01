@@ -26,16 +26,16 @@ class Parser {
       this.entityRefs = { ...options.entityRefs };
     }
 
-    this.xmlStr = `${XML_START_STRING}${this.#formatXml(NEW_LINE)}`;
+    this.xmlStr = `${XML_START_STRING}${this.#addCharStr(NEW_LINE)}`;
     
-    Object.keys(this.json).forEach((tagName) => {
-      this.#handleJSON(tagName, this.json[tagName], 0);
+    Object.keys(this.json).forEach( prop => {
+      this.#handleJSON(prop, this.json[prop], 0);
     });
 
     return this.xmlStr;
   }
 
-  #formatXml(char, lvl = 0) {
+  #addCharStr(char, lvl = 0) {
     if (!this.indent) {
       return '';
     }
@@ -52,34 +52,39 @@ class Parser {
     return str;
   }
 
-  #handleJSON(tagName, tagData, lvl) {
-    if ([this.attrProp, this.txtProp].includes(tagName)) {
+  #handleJSON(propName, data, lvl) {
+    if ([this.attrProp, this.txtProp].includes(propName)) {
       return;
     }
 
-    const text = isObj(tagData) ? tagData[this.txtProp] : tagData;
-    const attrs = tagData ? tagData[this.attrProp] : null;
-    const hasChildTags = this.#hasChildTags(tagData);
+    const text = isObj(data) ? data[this.txtProp] : data;
+    const attrs = data ? data[this.attrProp] : null;
+    const hasChildTags = this.#hasChildTags(data);
 
-    if (!this.#hasData(tagData)) {
-      this.#createTag(tagName, TAGS.SELF_CLOSING, {
+    if (!this.#hasData(data)) {
+      this.#createTag(propName, TAGS.SELF_CLOSING, {
         attrs, lvl,
       });
       return;
     }
 
-    this.#createTag(tagName, TAGS.OPENING, { attrs, lvl });
+    this.#createTag(propName, TAGS.OPENING, { attrs, lvl });
 
     if (hasChildTags) {
-      this.xmlStr += this.#formatXml(NEW_LINE);
-      Object.keys(tagData).forEach((childTagName) => {
-        this.#handleJSON(childTagName, tagData[childTagName], lvl + 1);
+      
+      this.xmlStr += this.#addCharStr(NEW_LINE);
+      
+      Object.keys(data).forEach((childProp) => {
+        this.#handleJSON(childProp, data[childProp], lvl + 1);
       });
+
     } else {
+
       this.#createTag(null, null, { text });
+
     }
 
-    this.#createTag(tagName, TAGS.CLOSING, { lvl, hasChildTags });
+    this.#createTag(propName, TAGS.CLOSING, { lvl, hasChildTags });
   }
 
   #hasChildTags(tagData) {
@@ -88,31 +93,28 @@ class Parser {
       : false);
   }
 
-  #createTag(name, type, op = {}) {
+  #createTag(tagName, tagType, props = {}) {
     const {
       text, attrs, lvl, hasChildTags,
-    } = op;
+    } = props;
+    
     if (
-      [TAGS.OPENING, TAGS.SELF_CLOSING].includes(type)
-      || ([TAGS.CLOSING].includes(type) && hasChildTags)
+      [TAGS.OPENING, TAGS.SELF_CLOSING].includes(tagType)
+      || ([TAGS.CLOSING].includes(tagType) && hasChildTags)
     ) {
-      this.xmlStr += this.#formatXml(SPACE, lvl);
+      this.xmlStr += this.#addCharStr(SPACE, lvl);
     }
 
-    if (type === TAGS.OPENING) {
-      this.xmlStr += `<${name}${this.#getAttrs(attrs)}>`;
+    if (tagType === TAGS.OPENING) {
+      this.xmlStr += `<${tagName}${this.#getAttrs(attrs)}>`;
+    } else if (tagType === TAGS.CLOSING) {
+      this.xmlStr += `</${tagName}>${this.#addCharStr(NEW_LINE)}`;
+    } else if (tagType === TAGS.SELF_CLOSING) {
+      this.xmlStr += `<${tagName}${this.#getAttrs(attrs)}/>${this.#addCharStr(NEW_LINE)}`;
     }
-    if (type === TAGS.CLOSING) {
-      this.xmlStr += `</${name}>`;
-    }
-    if (type === TAGS.SELF_CLOSING) {
-      this.xmlStr += `<${name}${this.#getAttrs(attrs)}/>`;
-    }
+
     if (typeof text !== 'undefined') {
       this.xmlStr += `${this.#getVal(text)}`;
-    }
-    if ([TAGS.CLOSING, TAGS.SELF_CLOSING].includes(type)) {
-      this.xmlStr += this.#formatXml(NEW_LINE);
     }
   }
 
