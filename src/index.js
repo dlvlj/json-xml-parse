@@ -1,4 +1,4 @@
-const { isObj, isFunc, isStr } = require('../utils');
+const { isObj, isFunc, isStr, isUndef } = require('../utils');
 const { SPACE, NEW_LINE, TAGS, OPTIONS, INVALID_JSON_DATA, XML_START_STRING } = require('../utils/constants')
 
 class Parser {
@@ -97,29 +97,23 @@ class Parser {
     const {
       text, attrs, lvl, hasChildTags,
     } = props;
-    
-    if (
-      [TAGS.OPENING, TAGS.SELF_CLOSING].includes(tagType)
-      || ([TAGS.CLOSING].includes(tagType) && hasChildTags)
-    ) {
-      this.xmlStr += this.#addCharStr(SPACE, lvl);
-    }
 
     if (tagType === TAGS.OPENING) {
-      this.xmlStr += `<${tagName}${this.#getAttrs(attrs)}>`;
+      this.xmlStr += `${this.#addCharStr(SPACE, lvl)}<${tagName}${this.#getAttrs(attrs)}>`;
     } else if (tagType === TAGS.CLOSING) {
-      this.xmlStr += `</${tagName}>${this.#addCharStr(NEW_LINE)}`;
+      this.xmlStr += `${hasChildTags? this.#addCharStr(SPACE, lvl) : ''}</${tagName}>${this.#addCharStr(NEW_LINE)}`;
     } else if (tagType === TAGS.SELF_CLOSING) {
-      this.xmlStr += `<${tagName}${this.#getAttrs(attrs)}/>${this.#addCharStr(NEW_LINE)}`;
+      this.xmlStr += `${this.#addCharStr(SPACE, lvl)}<${tagName}${this.#getAttrs(attrs)}/>${this.#addCharStr(NEW_LINE)}`;
     }
 
-    if (typeof text !== 'undefined') {
+    if (!isUndef(text)) {
       this.xmlStr += `${this.#getVal(text)}`;
     }
   }
 
   #hasData(tagData) {
     let result;
+
     if (isObj(tagData)) {
       result = Object.keys(tagData).some((tagName) => ![this.attrProp].includes(tagName));
     } else if (isFunc(tagData)) {
@@ -137,9 +131,11 @@ class Parser {
 
   #getVal(value, quotes = false) {
     let val = isFunc(value) ? value() : value;
+
     if (isStr(val)) {
       val = this.#handleEntities(val);
     }
+    
     return quotes ? `"${val}"` : `${val}`;
   }
 
