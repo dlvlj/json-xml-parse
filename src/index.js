@@ -35,23 +35,6 @@ class Parser {
     return this.xmlStr;
   }
 
-  #addCharStr(char, lvl = 0) {
-    if (!this.indent) {
-      return '';
-    }
-
-    let str = char;
-
-    if (str === SPACE) {
-      for (let i = 0; i < lvl; i += 1) {
-        str += SPACE;
-      }
-      return lvl ? str : '';
-    }
-
-    return str;
-  }
-
   #handleJSON(propName, data, lvl) {
     if ([this.attrProp, this.txtProp].includes(propName)) {
       return;
@@ -130,25 +113,42 @@ class Parser {
   }
 
   #getVal(value, quotes = false) {
-    let val = isFunc(value) ? value() : value;
+    let v = isFunc(value) ? value() : value;
 
-    if (isStr(val)) {
-      val = this.#handleEntities(val);
+    if (isStr(v)) {
+      v = this.#handleEntities(v);
     }
-    
-    return quotes ? `"${val}"` : `${val}`;
+
+    return quotes ? `"${v}"` : `${v}`;
   }
 
   #getAttrs(attrs) {
-    let attrStr = '';
+    let str = '';
 
     if (attrs) {
       Object.keys(attrs).forEach((attr) => {
-        attrStr += ` ${attr}=${this.#getVal(attrs[attr], true)}`;
+        str += ` ${attr}=${this.#getVal(attrs[attr], true)}`;
       });
     }
     
-    return attrStr;
+    return str;
+  }
+
+  #addCharStr(char, lvl = 0) {
+    if (!this.indent) {
+      return '';
+    }
+
+    let str = char;
+
+    if (str === SPACE) {
+      for (let i = 0; i < lvl; i += 1) {
+        str += SPACE;
+      }
+      return lvl ? str : '';
+    }
+
+    return str;
   }
 }
 
