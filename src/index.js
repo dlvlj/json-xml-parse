@@ -8,7 +8,7 @@ class Parser {
     this.attrProp = '';
     this.txtProp = '';
     this.xmlStr = '';
-    this.ENTITIES = {};
+    this.entityRefs = {};
   }
 
   toXml(data, options) {
@@ -23,7 +23,7 @@ class Parser {
       this.indent = Boolean(options[OPTIONS.indent]) || false;
       this.attrProp = String(options[OPTIONS.attrProp]) || '';
       this.txtProp = String(options[OPTIONS.txtProp]) || '';
-      this.ENTITIES = { ...options.entities };
+      this.entityRefs = { ...options.entityRefs };
     }
 
     this.xmlStr = `${XML_START_STRING}${this.#formatXml(NEW_LINE)}`;
@@ -129,8 +129,8 @@ class Parser {
   }
 
   #handleEntities(str) {
-    const regex = RegExp(Object.keys(this.ENTITIES).join('|'), 'gi');
-    return str.replace(regex, (matched) => this.ENTITIES[matched] || '');
+    const regex = RegExp(Object.keys(this.entityRefs).join('|'), 'gi');
+    return str.replace(regex, (matched) => this.entityRefs[matched] || '');
   }
 
   #getVal(value, quotes = false) {
