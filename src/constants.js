@@ -1,6 +1,5 @@
-const INVALID_JSON_DATA = (v) => `required input type JSON. Got ${typeof v}.`
-
-const XML_START_STRING = '<?xml version="1.0" encoding="UTF-8"?>';
+const DEFAULT_XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
+const DEFAULT_HTML_DECLARATION = '<!DOCTYPE html>';
 
 const SPACE = ' ';
 
@@ -16,7 +15,8 @@ const OPTIONS = {
   attrProp: 'attrProp',
   txtProp: 'txtProp',
   indent: 'indent',
-  entities: 'entities'
+  entityRefs: 'entityRefs',
+  selfClosingTags: 'selfClosingTags'
 };
 
 module.exports = {
@@ -24,6 +24,6 @@ module.exports = {
   NEW_LINE,
   TAGS,
   OPTIONS,
-  INVALID_JSON_DATA,
-  XML_START_STRING
+  DEFAULT_XML_DECLARATION,
+  DEFAULT_HTML_DECLARATION
 }
