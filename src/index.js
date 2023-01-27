@@ -3,17 +3,17 @@ import { SPACE, NEW_LINE, TAGS, OPTIONS, DEFAULT_XML_DECLARATION, DEFAULT_HTML_D
 
 class Parser {
   #json;
+  #outputStr;
   #indent;
   #attrProp;
   #txtProp;
-  #outputStr;
   #entityRefs;
   #selfClosingTags;
 
   constructor(options = {}) {
     this.#json = {};
     this.#outputStr = '';
-    this.#indent = Boolean(options[OPTIONS.indent]) || false;
+    this.#indent = Boolean(options[OPTIONS.indent]);
     this.#attrProp = String(options[OPTIONS.attrProp]) || '';
     this.#txtProp = String(options[OPTIONS.txtProp]) || '';
     this.#entityRefs = { ...options[OPTIONS.entityRefs] };
@@ -21,25 +21,24 @@ class Parser {
   }
 
   toXml(data = {}, xmlDeclaration = DEFAULT_XML_DECLARATION) {
-    this.#json = data || {};
+    this.#json = data;
     this.#outputStr = `${xmlDeclaration}${this.#addIndentChar(NEW_LINE)}`;
     
-    this.#handleConversion();
-    return this.#outputStr;
+    return this.#handleConversion();
   }
 
   toHTML(data = {}, htmlDeclaration = DEFAULT_HTML_DECLARATION) {
-    this.#json = data || {};
+    this.#json = data;
     this.#outputStr = `${htmlDeclaration}${this.#addIndentChar(NEW_LINE)}`;
 
-    this.#handleConversion();
-    return this.#outputStr;
+    return this.#handleConversion();
   }
 
   #handleConversion() {
     Object.keys(this.#json).forEach( prop => {
       this.#handleJSON(prop, this.#json[prop], 0);
     });
+    return this.#outputStr;
   }
 
   #handleJSON(propName, data, lvl) {
