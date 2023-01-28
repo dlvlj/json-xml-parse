@@ -42,6 +42,14 @@ class Parser {
   }
 
   #handleJSON(propName, data, lvl) {
+
+    // To handle multiple tags with same name
+    if(Array.isArray(data)) {
+      return data.forEach((d) => {
+        this.#handleJSON(propName, d, lvl);
+      })
+    }
+
     if ([this.#attrProp, this.#txtProp].includes(propName)) {
       return;
     }
