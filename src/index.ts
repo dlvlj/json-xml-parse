@@ -1,8 +1,5 @@
 import * as xmlParser from './xml/index';
 
-
-
-
-export default {
+export {
   xmlParser
 }

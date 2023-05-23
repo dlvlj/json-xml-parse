@@ -2,6 +2,6 @@ import toXml from './toXml'
 
 
 
-export default {
+export {
   toXml
 }

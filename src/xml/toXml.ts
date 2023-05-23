@@ -2,7 +2,7 @@ import { Properties, JsonData, TagProps } from './interface';
 import { isObj, isFunc, isStr, isUndef, isArr } from '../utils';
 import { SPACE, NEW_LINE, TAGS, PROPERTIES, DEFAULT_XML_DECLARATION, DEFAULT_HTML_DECLARATION } from '../constants';
 
-export default function(props: Partial<Properties>, jsonData: JsonData) {
+export default function toXml(props: Partial<Properties>, jsonData: JsonData) {
   let xmlString = '';
   const aliasAttribute: string = props?.alias?.attribute || '_attr';
   const aliasContent: string = props?.alias?.content || '_val';
@@ -11,9 +11,7 @@ export default function(props: Partial<Properties>, jsonData: JsonData) {
     if (!props.beautify) {
       return '';
     }
-  
     let str: string = char;
-
     if (str === SPACE) {
       for (let i: number = 0; i < repeat; i += 1) {
         str += SPACE;
@@ -23,9 +21,9 @@ export default function(props: Partial<Properties>, jsonData: JsonData) {
     return str;
   }
 
-  const handleEntities = (str: string) => {
-    const regex = RegExp(Object.keys(props?.entityMap)?.join('|'), 'gi');
-    return str.replace(regex, (match: string) => props?.entityMap?.[match] || '');
+  const handleEntities = (str: string): string => {
+    const regex = props.entityMap && RegExp(Object.keys(props.entityMap).join('|'), 'gi');
+    return regex ? str.replace(regex, (match: string) => props?.entityMap?.[match] || ''): '';
   }
 
   const getContent = (content: any, quotes: boolean): string => {

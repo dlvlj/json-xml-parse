@@ -3,6 +3,9 @@ interface Alias {
   content: string
 }
 
+interface EntityMap {
+  [key: string] : string
+}
 export interface JsonData {
   [key: string] : any
 }
@@ -10,7 +13,7 @@ export interface JsonData {
 export interface Properties {
   beautify: boolean
   alias: Alias
-  entityMap: JsonData
+  entityMap: EntityMap
   selfClosing: boolean
 }
 
