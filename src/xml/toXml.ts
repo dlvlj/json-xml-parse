@@ -6,6 +6,7 @@ export default function toXml(props: Partial<Properties>, jsonData: JsonData) {
   let xmlString = '';
   const aliasAttribute: string = props?.alias?.attribute || '_attr';
   const aliasContent: string = props?.alias?.content || '_val';
+  const entityMapRegex = props.entityMap && RegExp(Object.keys(props.entityMap).join('|'), 'gi');
 
   const beautify = (char: string, repeat:number = 0): string => {
     if (!props.beautify) {
@@ -22,8 +23,7 @@ export default function toXml(props: Partial<Properties>, jsonData: JsonData) {
   }
 
   const handleEntities = (str: string): string => {
-    const regex = props.entityMap && RegExp(Object.keys(props.entityMap).join('|'), 'gi');
-    return regex ? str.replace(regex, (match: string) => props?.entityMap?.[match] || ''): '';
+    return entityMapRegex ? str.replace(entityMapRegex, (match: string) => props.entityMap?.[match] || ''): '';
   }
 
   const getContent = (content: any, quotes: boolean): string => {
@@ -98,7 +98,7 @@ export default function toXml(props: Partial<Properties>, jsonData: JsonData) {
       return;
     }
 
-    const attributes = data?.data[aliasAttribute];
+    const attributes = data[aliasAttribute];
     if (props.selfClosing && hasContent(data)) {
       createTag(key, TAGS.SELF_CLOSING, {attributes, level});
       return;
