@@ -1,5 +1,5 @@
-import * as xmlParser from './xml/index';
+import * as jsXml from './xml/index';
 
 export {
-  xmlParser
+  jsXml
 }

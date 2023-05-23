@@ -1,7 +1,7 @@
-import toXml from './toXml'
+import toXmlString from './js-to-xml'
 
 
 
 export {
-  toXml
+  toXmlString
 }

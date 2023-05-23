@@ -2,8 +2,8 @@ import { Properties, JsonData, TagProps } from './interface';
 import { isObj, isFunc, isStr, isUndef, isArr } from '../utils';
 import { SPACE, NEW_LINE, TAGS} from '../constants';
 
-export default function toXml(props: Partial<Properties>, jsonData: JsonData) {
-  let xmlString = '';
+export default function toXmlString(props: Partial<Properties>, jsonData: JsonData): string {
+  let xmlString: string = '';
   const aliasAttribute: string = props?.alias?.attribute || '_attr';
   const aliasContent: string = props?.alias?.content || '_val';
   const entityMapRegex = props.entityMap && RegExp(Object.keys(props.entityMap).join('|'), 'gi');
@@ -66,24 +66,28 @@ export default function toXml(props: Partial<Properties>, jsonData: JsonData) {
     return Boolean(data);
   }
 
-  const createTag = (name: string, type: string, tagProps: Partial<TagProps>) => {
-    if (type === TAGS.OPENING) {
-      xmlString += `${beautify(SPACE, tagProps.level)}<${name}${getAttributes(tagProps.attributes)}>`;
-    } else if (type === TAGS.CLOSING) {
-      xmlString += `${tagProps.childTags ? beautify(SPACE, tagProps.level) : ''}</${name}>${beautify(NEW_LINE)}`;
-    } else if (type === TAGS.SELF_CLOSING) {
-      xmlString += `${beautify(SPACE, tagProps.level)}<${name}${getAttributes(tagProps.attributes)}/>${beautify(NEW_LINE)}`;
+  const createXmlTag = (name: string, type: string, tagProps: Partial<TagProps>) => {
+    if(type && name) {
+      if (type === TAGS.OPENING) {
+        xmlString += `${beautify(SPACE, tagProps.level)}<${name}${getAttributes(tagProps.attributes)}>`;
+      } else if (type === TAGS.SELF_CLOSING) {
+        xmlString += `${beautify(SPACE, tagProps.level)}<${name}${getAttributes(tagProps.attributes)}/>${beautify(NEW_LINE)}`;
+      } 
+      // closing tag
+      else {
+        xmlString += `${tagProps.childTags ? beautify(SPACE, tagProps.level) : ''}</${name}>${beautify(NEW_LINE)}`;
+      }
+      return;
     }
-    if (!isUndef(tagProps.content)) {
-      xmlString += `${getStringVal(tagProps.content, false)}`;
-    }
+    // to show content between tags <Tag>content</Tag>
+    xmlString += `${getStringVal(tagProps.content, false)}`;
   }
   
-  const handleJSON = (key: string, data: any, level: number) => {
+  const generateXmlString = (key: string, data: any, level: number) => {
 
     if(isArr(data)) {
       return data.forEach((d: any) => {
-        handleJSON(key, d, level);
+        generateXmlString(key, d, level);
       })
     }
 
@@ -92,29 +96,29 @@ export default function toXml(props: Partial<Properties>, jsonData: JsonData) {
     }
 
     const attributes = data[aliasAttribute];
-    if (props.selfClosing && !hasValToShow(data)) {
-      createTag(key, TAGS.SELF_CLOSING, {attributes, level});
+    if (!hasValToShow(data) && props.selfClosing) {
+      createXmlTag(key, TAGS.SELF_CLOSING, {attributes, level});
       return;
     }
 
-    createTag(key, TAGS.OPENING, {attributes, level});
+    createXmlTag(key, TAGS.OPENING, {attributes, level});
 
     const childTags: boolean = isNestedData(data);
     if(childTags) {
       xmlString += beautify(NEW_LINE);
       Object.keys(data).forEach((k) => {
-        handleJSON(k, data[k], level + 1);
+        generateXmlString(k, data[k], level + 1);
       });
     } else {
       const content: any = isObj(data) ? data[aliasContent] : data;
-      createTag('', '', { content });
+      createXmlTag('', '', { content });
     }
-    createTag(key, TAGS.CLOSING, { level, childTags });
+    createXmlTag(key, TAGS.CLOSING, { level, childTags });
   }
 
   const parseToXml = (data: JsonData): string => {
     Object.keys(data).forEach((key) => {
-      handleJSON(key, data[key], 0);
+      generateXmlString(key, data[key], 0);
     });
     return xmlString;
   }
