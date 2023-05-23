@@ -6,18 +6,18 @@ interface Alias {
 interface EntityMap {
   [key: string] : string
 }
-export interface JsonData {
+export interface InputData {
   [key: string] : any
 }
 
-export interface Properties {
+export interface ToXmlProps {
   beautify: boolean
   alias: Alias
   entityMap: EntityMap
   selfClosing: boolean
 }
 
-export interface TagProps {
+export interface XmlTagProps {
   attributes: any
   level: number
   childTags: boolean

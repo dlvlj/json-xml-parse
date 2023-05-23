@@ -1,8 +1,8 @@
-import { Properties, JsonData, TagProps } from './interface';
+import { ToXmlProps, InputData, XmlTagProps } from './interface';
 import { isObj, isFunc, isStr, isArr } from '../utils';
 import { SPACE, NEW_LINE, TAGS} from '../constants';
 
-export default function toXmlString(props: Partial<Properties>, jsonData: JsonData): string {
+export default function toXmlString(props: Partial<ToXmlProps>, jsonData: InputData): string {
   let xmlString: string = '';
   const aliasAttribute: string = props?.alias?.attribute || '_attr';
   const aliasContent: string = props?.alias?.content || '_val';
@@ -34,7 +34,7 @@ export default function toXmlString(props: Partial<Properties>, jsonData: JsonDa
     return doubleQuotes ? `"${strVal}"` : `${strVal}`;
   }
 
-  const getAttributes = (attributes: JsonData): string => {
+  const getAttributes = (attributes: InputData): string => {
     let str = '';
     if (attributes) {
       Object.keys(attributes).forEach((a) => {
@@ -66,21 +66,21 @@ export default function toXmlString(props: Partial<Properties>, jsonData: JsonDa
     return Boolean(data);
   }
 
-  const createXmlTag = (name: string, type: string, tagProps: Partial<TagProps>) => {
+  const createXmlTag = (name: string, type: string, XmlTagProps: Partial<XmlTagProps>) => {
     if(type && name) {
       if (type === TAGS.OPENING) {
-        xmlString += `${beautify(SPACE, tagProps.level)}<${name}${getAttributes(tagProps.attributes)}>`;
+        xmlString += `${beautify(SPACE, XmlTagProps.level)}<${name}${getAttributes(XmlTagProps.attributes)}>`;
       } else if (type === TAGS.SELF_CLOSING) {
-        xmlString += `${beautify(SPACE, tagProps.level)}<${name}${getAttributes(tagProps.attributes)}/>${beautify(NEW_LINE)}`;
+        xmlString += `${beautify(SPACE, XmlTagProps.level)}<${name}${getAttributes(XmlTagProps.attributes)}/>${beautify(NEW_LINE)}`;
       } 
       // closing tag
       else {
-        xmlString += `${tagProps.childTags ? beautify(SPACE, tagProps.level) : ''}</${name}>${beautify(NEW_LINE)}`;
+        xmlString += `${XmlTagProps.childTags ? beautify(SPACE, XmlTagProps.level) : ''}</${name}>${beautify(NEW_LINE)}`;
       }
       return;
     }
     // to show content between tags <Tag>content</Tag>
-    xmlString += `${getStringVal(tagProps.content, false)}`;
+    xmlString += `${getStringVal(XmlTagProps.content, false)}`;
   }
   
   const generateXmlString = (key: string, data: any, level: number) => {
@@ -116,7 +116,7 @@ export default function toXmlString(props: Partial<Properties>, jsonData: JsonDa
     createXmlTag(key, TAGS.CLOSING, { level, childTags });
   }
 
-  const parseToXml = (data: JsonData): string => {
+  const parseToXml = (data: InputData): string => {
     Object.keys(data).forEach((key) => {
       generateXmlString(key, data[key], 0);
     });

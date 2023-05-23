@@ -1,4 +1,4 @@
-import * as jsXml from './xml/index';
+import * as jsXml from './js-xml/index';
 
 export {
   jsXml
