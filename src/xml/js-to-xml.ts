@@ -1,5 +1,5 @@
 import { Properties, JsonData, TagProps } from './interface';
-import { isObj, isFunc, isStr, isUndef, isArr } from '../utils';
+import { isObj, isFunc, isStr, isArr } from '../utils';
 import { SPACE, NEW_LINE, TAGS} from '../constants';
 
 export default function toXmlString(props: Partial<Properties>, jsonData: JsonData): string {
