@@ -4,8 +4,8 @@ import { SPACE, NEW_LINE, TAGS} from '../constants';
 
 export default function toXmlString(props: Partial<ToXmlProps>, jsonData: InputData): string {
   let xmlString: string = '';
-  const aliasAttribute: string = props?.alias?.attribute || '_attr';
-  const aliasContent: string = props?.alias?.content || '_val';
+  const aliasAttribute: string = props?.alias?.attribute || '@';
+  const aliasContent: string = props?.alias?.content || '#';
   const entityMapRegex = props.entityMap && RegExp(Object.keys(props.entityMap).join('|'), 'gi');
 
   const beautify = (char: string, repeat:number = 0): string => {
