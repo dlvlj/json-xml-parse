@@ -4,8 +4,8 @@ import { SPACE, NEW_LINE, TAGS} from '../constants';
 
 export default function toXmlString(props: Partial<ToXmlProps>, jsonData: InputData): string {
   let xmlString: string = '';
-  const aliasAttribute: string = props?.alias?.attribute || '@';
-  const aliasContent: string = props?.alias?.content || '#';
+  const attrKey: string = props?.attrKey || '@';
+  const contentKey: string = props?.contentKey || '#';
   const entityMapRegex = props.entityMap && RegExp(Object.keys(props.entityMap).join('|'), 'gi');
 
   const beautify = (char: string, repeat:number = 0): string => {
@@ -45,14 +45,14 @@ export default function toXmlString(props: Partial<ToXmlProps>, jsonData: InputD
   }
 
   const isNestedData = (data: any): boolean => {
-    return Boolean(isObj(data) && Object.keys(data).some((tagName) => ![aliasAttribute, aliasContent].includes(tagName)))
+    return Boolean(isObj(data) && Object.keys(data).some((tagName) => ![attrKey, contentKey].includes(tagName)))
   }
 
   const hasValToShow = (data: any) : boolean => {
     // let result: boolean;
 
     // if (isObj(data)) {
-    //   result = Object.keys(data).some((tagName) => ![aliasAttribute].includes(tagName));
+    //   result = Object.keys(data).some((tagName) => ![attrKey].includes(tagName));
     // } else if (isFunc(data)) {
     //   result = data();
     // } else {
@@ -61,7 +61,7 @@ export default function toXmlString(props: Partial<ToXmlProps>, jsonData: InputD
     // return Boolean(result);
 
     if (isObj(data)) {
-      return Object.keys(data).some((key) => ![aliasAttribute].includes(key));
+      return Object.keys(data).some((key) => ![attrKey].includes(key));
     } 
     return Boolean(data);
   }
@@ -91,11 +91,11 @@ export default function toXmlString(props: Partial<ToXmlProps>, jsonData: InputD
       })
     }
 
-    if ([aliasAttribute, aliasContent].includes(key)) {
+    if ([attrKey, contentKey].includes(key)) {
       return;
     }
 
-    const attributes = data[aliasAttribute];
+    const attributes = data[attrKey];
     if (!hasValToShow(data) && props.selfClosing) {
       createXmlTag(key, TAGS.SELF_CLOSING, {attributes, level});
       return;
@@ -110,7 +110,7 @@ export default function toXmlString(props: Partial<ToXmlProps>, jsonData: InputD
         generateXmlString(k, data[k], level + 1);
       });
     } else {
-      const content: any = isObj(data) ? data[aliasContent] : data;
+      const content: any = isObj(data) ? data[contentKey] : data;
       createXmlTag('', '', { content });
     }
     createXmlTag(key, TAGS.CLOSING, { level, childTags });
