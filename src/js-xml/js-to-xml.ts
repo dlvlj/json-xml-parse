@@ -9,7 +9,7 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
   const setEntities = createEntityHandler(props?.entityMap)
 
   const generateXmlString = (key: string, data: any, level: number) => {
-    // handles array of same tags eg - name: ['dev', 'junior', 'rambo']
+    // Handles an array of same tags, e.g., name: ['dev', 'junior', 'rambo']
     if(isArr(data)) {
       data.forEach((d: any) => {
         generateXmlString(key, d, level);
@@ -22,23 +22,31 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
     }
 
     const attributes = data?.[attrKey] || {};
+
+    // If the content is missing and self-closing tags are enabled
     if (!checkContent(data, attrKey) && props.selfClosing) {
       xmlString += createTag[TAGS.SELF_CLOSING]({attributes, level, name: key, setEntities, beautify: props?.beautify})
       return;
     }
+
+    // Opening tag
     xmlString += createTag[TAGS.OPENING]({attributes, level, name: key, setEntities, beautify: props?.beautify})
 
     const hasChidTags: boolean = checkChildTags(data, attrKey, contentKey);
 
     if(hasChidTags) {
       xmlString += beautify(NEW_LINE, null, props?.beautify);
+       // Generate child tags recursively
       Object.keys(data).forEach((k) => {
         generateXmlString(k, data[k], level + 1);
       });
     } else {
       const content: any = !!data && isObj(data) ? data[contentKey] : data;
+
+      // Content value
       xmlString += getStringVal(content, false, setEntities);
     }
+    // Closing tag
     xmlString += createTag[TAGS.CLOSING]({ level, hasChidTags, name: key, setEntities, beautify: props?.beautify})
   }
 
