@@ -5,7 +5,7 @@ export interface InputData {
   [key: string] : any
 }
 
-export interface ToXmlProps {
+export interface InputProps {
   beautify: boolean
   entityMap: EntityMap
   selfClosing: boolean

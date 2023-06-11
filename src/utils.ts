@@ -33,7 +33,7 @@ export const checkChildTags = (data: any, attrKey: string, contentKey: string): 
   return Boolean( !!data && isObj(data) && Object.keys(data).some((tagName) => ![attrKey, contentKey].includes(tagName)))
 }
 
-export const CREATE_TAG = {
+export const createTag = {
   [TAGS.OPENING]: (tagProps: Partial<TagProps>): string => `${beautify(SPACE, tagProps.level, tagProps.beautify)}<${tagProps.name}${getAttributes(tagProps.attributes, tagProps.setEntities)}>`,
   [TAGS.SELF_CLOSING]: (tagProps: Partial<TagProps>): string => `${beautify(SPACE, tagProps.level, tagProps.beautify)}<${tagProps.name}${getAttributes(tagProps.attributes, tagProps.setEntities)}/>${beautify(NEW_LINE, null, tagProps.beautify)}`,
   [TAGS.CLOSING]: (tagProps: Partial<TagProps>): string => `${tagProps.hasChidTags ? beautify(SPACE, tagProps.level, tagProps.beautify) : DEFAULTS.EMPTY_STR}</${tagProps.name}>${beautify(NEW_LINE, null, tagProps.beautify)}`
