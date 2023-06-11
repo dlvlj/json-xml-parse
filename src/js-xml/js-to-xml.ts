@@ -11,9 +11,10 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
   const generateXmlString = (key: string, data: any, level: number) => {
     // handles array of same tags eg - name: ['dev', 'junior', 'rambo']
     if(isArr(data)) {
-      return data.forEach((d: any) => {
+      data.forEach((d: any) => {
         generateXmlString(key, d, level);
-      })
+      });
+      return;
     }
 
     if ([attrKey, contentKey].includes(key)) {
@@ -36,7 +37,7 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
       });
     } else {
       const content: any = !!data && isObj(data) ? data[contentKey] : data;
-      xmlString += `${getStringVal(content, false, setEntities)}`;
+      xmlString += getStringVal(content, false, setEntities);
     }
     xmlString += createTag[TAGS.CLOSING]({ level, hasChidTags, name: key, setEntities, beautify: props?.beautify})
   }
