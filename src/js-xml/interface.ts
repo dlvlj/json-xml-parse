@@ -14,8 +14,11 @@ export interface ToXmlProps {
 }
 
 export interface XmlTagProps {
+  name: string,
   attributes: any
   level: number
-  childTags: boolean
+  hasChidTags: boolean
   content: any
+  setEntities: Function
+  beautify: boolean
 }
