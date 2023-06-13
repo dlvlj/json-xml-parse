@@ -13,7 +13,7 @@ export interface InputProps {
   contentKey: string
 }
 
-export interface XmlTagProps {
+export interface TagProps {
   name: string,
   attributes: any
   level: number

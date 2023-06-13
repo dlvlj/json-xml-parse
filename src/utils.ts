@@ -1,4 +1,4 @@
-import { InputData, XmlTagProps as TagProps } from './js-xml/interface';
+import { InputData, TagProps } from './js-xml/interface';
 import { DEFAULTS, SPACE, TAGS, NEW_LINE } from "./constants";
 
 export const isObj = (val: object) => typeof val === 'object';
