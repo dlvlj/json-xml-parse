@@ -8,5 +8,8 @@ export const TAGS = {
 export const DEFAULTS = {
   ATTR_KEY: '@',
   CONTENT_KEY: '#',
-  EMPTY_STR: ''
+  EMPTY_STR: '',
+  DECLARATION: {
+    version: '1.0'
+  }
 }

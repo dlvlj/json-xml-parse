@@ -1,23 +1,25 @@
 import { InputData, TagProps } from './js-xml/interface';
 import { DEFAULTS, SPACE, TAGS, NEW_LINE } from "./constants";
 
-export const isObj = (val: object) => typeof val === 'object';
+export const isObj = (val: any) => typeof val === 'object';
 
-export const isFunc = (val: Function) => typeof val === 'function';
+export const isFunc = (val: any) => typeof val === 'function';
 
-export const isStr = (val: string) => typeof val === 'string';
+export const isStr = (val: any) => typeof val === 'string';
 
 export const isArr = (val: any) => Array.isArray(val);
 
-export const isUndef = (val: undefined) => typeof val === 'undefined'
+export const isUndef = (val: any) => typeof val === 'undefined'
 
-export const beautify = (char: string, repeat: number | null = 0, enable: boolean = false): string => {
+export const beautify = (char: string, level: number | null = 0, enable: boolean = false): string => {
   if(!enable) {
     return DEFAULTS.EMPTY_STR;
   }
-  let str: string = char;
-  if (repeat) {
-    for (let i = 0; i < repeat; i += 1) {
+  
+  let str: string =  char;
+
+  if (level) {
+    for (let i = 0; i < level; i += 1) {
       str += char;
     }
   }
@@ -62,4 +64,12 @@ export const checkContent = (data: any, attrKey: string) : boolean => {
     return Object.keys(data).some((key) => ![attrKey].includes(key));
   } 
   return Boolean(data);
+}
+
+export const setDeclaration = (decAttrs: InputData | void, setEntities: Function | void, beauti: boolean = false): string => {
+  const attrs = {
+    ...DEFAULTS.DECLARATION,
+    ...(isObj(decAttrs)? decAttrs : {})
+  } 
+  return `<?xml${getAttributes(attrs, setEntities)} ?>${beautify(NEW_LINE, null, beauti)}`
 }

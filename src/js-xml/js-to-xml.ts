@@ -1,12 +1,12 @@
 import { InputProps, InputData } from './interface';
-import { isObj, isArr, beautify, createEntityHandler, checkChildTags, createTag, getStringVal, checkContent } from '../utils';
+import { isObj, isArr, beautify, createEntityHandler, checkChildTags, createTag, getStringVal, checkContent, setDeclaration } from '../utils';
 import { NEW_LINE, TAGS, DEFAULTS} from '../constants';
 
 export default (props: Partial<InputProps>, jsonData: InputData): string => {
-  let xmlString: string = DEFAULTS.EMPTY_STR;
   const attrKey: string = props?.attrKey || DEFAULTS.ATTR_KEY;
   const contentKey: string = props?.contentKey || DEFAULTS.CONTENT_KEY;
-  const setEntities = createEntityHandler(props?.entityMap)
+  const setEntities = createEntityHandler(props?.entityMap);
+  let xmlString: string = setDeclaration(props?.declaration, setEntities, props?.beautify);
 
   const generateXmlString = (key: string, data: any, level: number) => {
     // Handles an array of same tags, e.g., name: ['dev', 'junior', 'rambo']

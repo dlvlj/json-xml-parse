@@ -1,16 +1,13 @@
-interface EntityMap {
-  [key: string] : string
-}
 export interface InputData {
   [key: string] : any
 }
-
 export interface InputProps {
   beautify: boolean
-  entityMap: EntityMap
+  entityMap: InputData
   selfClosing: boolean
   attrKey: string
-  contentKey: string
+  contentKey: string,
+  declaration: InputData
 }
 
 export interface TagProps {
