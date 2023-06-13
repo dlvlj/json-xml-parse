@@ -1,6 +1,6 @@
 import { InputProps, InputData } from './interface';
 import { isObj, isArr, beautify, createEntityHandler, checkChildTags, createTag, getStringVal, checkContent, setDeclaration } from '../utils';
-import { NEW_LINE, TAGS, DEFAULTS} from '../constants';
+import { TAGS, DEFAULTS} from '../constants';
 
 export default (props: Partial<InputProps>, jsonData: InputData): string => {
   const attrKey: string = props?.attrKey || DEFAULTS.ATTR_KEY;
@@ -35,7 +35,7 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
     const hasChidTags: boolean = checkChildTags(data, attrKey, contentKey);
 
     if(hasChidTags) {
-      xmlString += beautify(NEW_LINE, null, props?.beautify);
+      xmlString += beautify(DEFAULTS.NEW_LINE, null, props?.beautify);
        // Generate child tags recursively
       Object.keys(data).forEach((k) => {
         generateXmlString(k, data[k], level + 1);

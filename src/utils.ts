@@ -1,5 +1,5 @@
 import { InputData, TagProps } from './js-xml/interface';
-import { DEFAULTS, SPACE, TAGS, NEW_LINE } from "./constants";
+import { DEFAULTS, TAGS } from "./constants";
 
 export const isObj = (val: any) => typeof val === 'object';
 
@@ -15,7 +15,7 @@ export const beautify = (char: string, level: number | null = 0, enable: boolean
   if(!enable) {
     return DEFAULTS.EMPTY_STR;
   }
-  
+
   let str: string =  char;
 
   if (level) {
@@ -36,9 +36,9 @@ export const checkChildTags = (data: any, attrKey: string, contentKey: string): 
 }
 
 export const createTag = {
-  [TAGS.OPENING]: (tagProps: Partial<TagProps>): string => `${beautify(SPACE, tagProps.level, tagProps.beautify)}<${tagProps.name}${getAttributes(tagProps.attributes, tagProps.setEntities)}>`,
-  [TAGS.SELF_CLOSING]: (tagProps: Partial<TagProps>): string => `${beautify(SPACE, tagProps.level, tagProps.beautify)}<${tagProps.name}${getAttributes(tagProps.attributes, tagProps.setEntities)}/>${beautify(NEW_LINE, null, tagProps.beautify)}`,
-  [TAGS.CLOSING]: (tagProps: Partial<TagProps>): string => `${tagProps.hasChidTags ? beautify(SPACE, tagProps.level, tagProps.beautify) : DEFAULTS.EMPTY_STR}</${tagProps.name}>${beautify(NEW_LINE, null, tagProps.beautify)}`
+  [TAGS.OPENING]: (tagProps: Partial<TagProps>): string => `${beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify)}<${tagProps.name}${getAttributes(tagProps.attributes, tagProps.setEntities)}>`,
+  [TAGS.SELF_CLOSING]: (tagProps: Partial<TagProps>): string => `${beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify)}<${tagProps.name}${getAttributes(tagProps.attributes, tagProps.setEntities)}/>${beautify(DEFAULTS.NEW_LINE, null, tagProps.beautify)}`,
+  [TAGS.CLOSING]: (tagProps: Partial<TagProps>): string => `${tagProps.hasChidTags ? beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify) : DEFAULTS.EMPTY_STR}</${tagProps.name}>${beautify(DEFAULTS.NEW_LINE, null, tagProps.beautify)}`
 }
 
 export const getStringVal = (inputData: any, doubleQuotes: boolean, setEntities: Function | void): string => {
@@ -71,5 +71,5 @@ export const setDeclaration = (decAttrs: InputData | void, setEntities: Function
     ...DEFAULTS.DECLARATION,
     ...(isObj(decAttrs)? decAttrs : {})
   } 
-  return `<?xml${getAttributes(attrs, setEntities)} ?>${beautify(NEW_LINE, null, beauti)}`
+  return `<?xml${getAttributes(attrs, setEntities)} ?>${beautify(DEFAULTS.NEW_LINE, null, beauti)}`
 }
