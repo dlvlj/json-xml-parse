@@ -1,5 +1,5 @@
 import { InputProps, InputData } from './interface';
-import { isObj, isArr, beautify, createEntityHandler, checkChildTags, createTag, getStringVal, checkContent, setDeclaration } from '../utils';
+import { isObj, isArr, beautify, createEntityHandler, checkChildTags, createTag, setStringVal, checkContent, setDeclaration } from '../utils';
 import { TAGS, DEFAULTS} from '../constants';
 
 export default (props: Partial<InputProps>, jsonData: InputData): string => {
@@ -9,7 +9,7 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
   let xmlString: string = setDeclaration(props?.declaration, setEntities, props?.beautify);
 
   const generateXmlString = (key: string, data: any, level: number) => {
-    // Handles an array of same tags, e.g., name: ['dev', 'junior', 'rambo']
+    // Handles an array of same tag, e.g., h1: ['title1', 'title2', 'title3']
     if(isArr(data)) {
       data.forEach((d: any) => {
         generateXmlString(key, d, level);
@@ -42,9 +42,8 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
       });
     } else {
       const content: any = !!data && isObj(data) ? data[contentKey] : data;
-
       // Content value
-      xmlString += getStringVal(content, false, setEntities);
+      xmlString += setStringVal(content, false, setEntities);
     }
     // Closing tag
     xmlString += createTag[TAGS.CLOSING]({ level, hasChidTags, name: key, setEntities, beautify: props?.beautify})

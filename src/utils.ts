@@ -36,12 +36,12 @@ export const checkChildTags = (data: any, attrKey: string, contentKey: string): 
 }
 
 export const createTag = {
-  [TAGS.OPENING]: (tagProps: Partial<TagProps>): string => `${beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify)}<${tagProps.name}${getAttributes(tagProps.attributes, tagProps.setEntities)}>`,
-  [TAGS.SELF_CLOSING]: (tagProps: Partial<TagProps>): string => `${beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify)}<${tagProps.name}${getAttributes(tagProps.attributes, tagProps.setEntities)}/>${beautify(DEFAULTS.NEW_LINE, null, tagProps.beautify)}`,
+  [TAGS.OPENING]: (tagProps: Partial<TagProps>): string => `${beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify)}<${tagProps.name}${setAttributes(tagProps.attributes, tagProps.setEntities)}>`,
+  [TAGS.SELF_CLOSING]: (tagProps: Partial<TagProps>): string => `${beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify)}<${tagProps.name}${setAttributes(tagProps.attributes, tagProps.setEntities)}/>${beautify(DEFAULTS.NEW_LINE, null, tagProps.beautify)}`,
   [TAGS.CLOSING]: (tagProps: Partial<TagProps>): string => `${tagProps.hasChidTags ? beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify) : DEFAULTS.EMPTY_STR}</${tagProps.name}>${beautify(DEFAULTS.NEW_LINE, null, tagProps.beautify)}`
 }
 
-export const getStringVal = (inputData: any, doubleQuotes: boolean, setEntities: Function | void): string => {
+export const setStringVal = (inputData: any, doubleQuotes: boolean, setEntities: Function | void): string => {
   let strVal = isFunc(inputData) ? inputData() : inputData;
   if (isStr(strVal)) {
     strVal = setEntities && setEntities(strVal);
@@ -49,11 +49,11 @@ export const getStringVal = (inputData: any, doubleQuotes: boolean, setEntities:
   return doubleQuotes ? `"${strVal}"` : `${strVal}`;
 }
 
-export const getAttributes = (attributes: InputData, setEntities: Function | void): string => {
+export const setAttributes = (attributes: InputData, setEntities: Function | void): string => {
   let str = DEFAULTS.EMPTY_STR;
   if (attributes) {
     Object.keys(attributes).forEach((a) => {
-      str += ` ${a}=${getStringVal(attributes[a], true, setEntities)}`;
+      str += ` ${a}=${setStringVal(attributes[a], true, setEntities)}`;
     });
   }
   return str;
@@ -71,5 +71,5 @@ export const setDeclaration = (decAttrs: InputData | void, setEntities: Function
     ...DEFAULTS.DECLARATION,
     ...(isObj(decAttrs)? decAttrs : {})
   } 
-  return `<?xml${getAttributes(attrs, setEntities)} ?>${beautify(DEFAULTS.NEW_LINE, null, beauti)}`
+  return `<?xml${setAttributes(attrs, setEntities)} ?>${beautify(DEFAULTS.NEW_LINE, null, beauti)}`
 }
