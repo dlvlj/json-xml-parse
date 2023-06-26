@@ -1,4 +1,9 @@
-node_modules/*
-src/*
-test/*
-babel*
+node_modules
+src
+build
+test
+.editorconfig
+.eslintrc
+.gitignore
+tsconfig.json
+yarn.lock

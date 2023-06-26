@@ -1,4 +1,4 @@
-const Parser = require('../dist');
+const Parser = require('../lib');
 
 const options = {
     indent: true,

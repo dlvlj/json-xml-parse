@@ -1,27 +1,26 @@
 {
   "name": "json-xml-parse",
-  "version": "1.2.2",
-  "main": "dist",
+  "version": "1.2.4",
+  "main": "./lib/index.js",
+  "type": "./lib/index.d.js",
   "scripts": {
-    "build": "rm -rf dist && npx babel src --out-dir dist",
-    "test" : "npm run build && node test"
+    "build": "tsc",
+    "test": "yarn run build && node test",
+    "lint": "yarn run eslint ./src"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/divijbhardwaj/json-xml-parse"
   },
   "keywords": [
-    "json",
-    "xml",
     "jsonToXml",
     "json-xml-parse",
-    "json-to-xml",
-    "json-to-xml-parser"
+    "json-to-xml"
   ],
-  "license": "BSD-3-Clause",
   "devDependencies": {
-    "@babel/cli": "^7.19.3",
-    "@babel/core": "^7.20.5",
-    "@babel/preset-env": "^7.20.2"
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.0",
+    "eslint": "^8.43.0",
+    "typescript": "^4.1.6"
   }
 }

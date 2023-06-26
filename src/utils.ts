@@ -11,7 +11,7 @@ export const isArr = (val: any) => Array.isArray(val);
 
 export const isUndef = (val: any) => typeof val === 'undefined'
 
-export const beautify = (char: string, level: number | null = 0, enable: boolean = false): string => {
+export const beautify = (char: string, level: number | null = 0, enable = false): string => {
   if(!enable) {
     return DEFAULTS.EMPTY_STR;
   }
@@ -26,12 +26,12 @@ export const beautify = (char: string, level: number | null = 0, enable: boolean
   return str;
 }
 
-export const createEntityHandler = (entityMap: any): Function => {
+export const createEntityHandler = (entityMap: InputData) => {
   const entityMapRegex = entityMap && RegExp(Object.keys(entityMap).join('|'), 'gi');
   return (str: string) => entityMapRegex ? str.replace(entityMapRegex, (match: string) => entityMap?.[match] || DEFAULTS.EMPTY_STR) : str;
 }
 
-export const checkChildTags = (data: any, attrKey: string, contentKey: string): boolean => {
+export const checkChildTags = (data: InputData, attrKey: string, contentKey: string) => {
   return Boolean( !!data && isObj(data) && Object.keys(data).some((tagName) => ![attrKey, contentKey].includes(tagName)))
 }
 
@@ -41,7 +41,7 @@ export const createTag = {
   [TAGS.CLOSING]: (tagProps: Partial<TagProps>): string => `${tagProps.hasChidTags ? beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify) : DEFAULTS.EMPTY_STR}</${tagProps.name}>${beautify(DEFAULTS.NEW_LINE, null, tagProps.beautify)}`
 }
 
-export const setStringVal = (inputData: any, doubleQuotes: boolean, setEntities: Function | void): string => {
+export const setStringVal = (inputData: any, doubleQuotes: boolean, setEntities:((str: string) => string) | undefined): string => {
   let strVal = isFunc(inputData) ? inputData() : inputData;
   if (isStr(strVal)) {
     strVal = setEntities && setEntities(strVal);
@@ -49,7 +49,7 @@ export const setStringVal = (inputData: any, doubleQuotes: boolean, setEntities:
   return doubleQuotes ? `"${strVal}"` : `${strVal}`;
 }
 
-export const setAttributes = (attributes: InputData, setEntities: Function | void): string => {
+export const setAttributes = (attributes: InputData, setEntities:((str: string) => string) | undefined): string => {
   let str = DEFAULTS.EMPTY_STR;
   if (attributes) {
     Object.keys(attributes).forEach((a) => {
@@ -59,17 +59,17 @@ export const setAttributes = (attributes: InputData, setEntities: Function | voi
   return str;
 }
 
-export const checkContent = (data: any, attrKey: string) : boolean => {
+export const checkContent = (data: InputData, attrKey: string) => {
   if (!!data && isObj(data)) {
     return Object.keys(data).some((key) => ![attrKey].includes(key));
   } 
   return Boolean(data);
 }
 
-export const setDeclaration = (decAttrs: InputData | void, setEntities: Function | void, beauti: boolean = false): string => {
+export const setDeclaration = (decAttrs: InputData | void, setEntities: ((str: string) => string) | undefined, beauti = false): string => {
   const attrs = {
     ...DEFAULTS.DECLARATION,
     ...(isObj(decAttrs)? decAttrs : {})
   } 
-  return `<?xml${setAttributes(attrs, setEntities)} ?>${beautify(DEFAULTS.NEW_LINE, null, beauti)}`
+  return `<?xml${setAttributes(attrs, setEntities)}?>${beautify(DEFAULTS.NEW_LINE, null, beauti)}`
 }
