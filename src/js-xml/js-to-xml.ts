@@ -9,7 +9,7 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
   let xmlString: string = setDeclaration(props?.declaration, setEntities, props?.beautify);
 
   const generateXmlString = (key: string, data: any, level: number) => {
-    // Handles an array of same tag, e.g., h1: ['title1', 'title2', 'title3']
+    // Handles an array of tags
     if(isArr(data)) {
       data.forEach((d: any) => {
         generateXmlString(key, d, level);
@@ -28,25 +28,28 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
       xmlString += createTag[TAGS.SELF_CLOSING]({attributes, level, name: key, setEntities, beautify: props?.beautify})
       return;
     }
-
     // Opening tag
-    xmlString += createTag[TAGS.OPENING]({attributes, level, name: key, setEntities, beautify: props?.beautify})
+    xmlString += key && createTag[TAGS.OPENING]({attributes, level, name: key, setEntities, beautify: props?.beautify}) || ''
 
-    const hasChidTags: boolean = checkChildTags(data, attrKey, contentKey);
+    const hasChidTags: boolean = checkChildTags(data, attrKey, contentKey); //doesnt check for nested content key
+    const content = !!data && isObj(data) ? data[contentKey] : data;
+    const contentIsNested = Boolean(isObj(content) && Object.keys(content).length);
 
-    if(hasChidTags) {
+    if(hasChidTags){
       xmlString += beautify(DEFAULTS.NEW_LINE, null, props?.beautify);
-       // Generate child tags recursively
+      // Generate child tags recursively
       Object.keys(data).forEach((k) => {
         generateXmlString(k, data[k], level + 1);
       });
     } else {
-      const content = !!data && isObj(data) ? data[contentKey] : data;
       // Content value
+      if(contentIsNested) {
+        generateXmlString('', content, level);
+      } else
       xmlString += setStringVal(content, false, setEntities);
     }
     // Closing tag
-    xmlString += createTag[TAGS.CLOSING]({ level, hasChidTags, name: key, setEntities, beautify: props?.beautify})
+    xmlString += key && createTag[TAGS.CLOSING]({ level, hasChidTags: hasChidTags || contentIsNested, name: key, setEntities, beautify: props?.beautify}) ||''
   }
 
   const parseToXml = (data: InputData): string => {
@@ -62,6 +65,5 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
       });
     return xmlString;
   }
-
   return parseToXml(jsonData);
 }

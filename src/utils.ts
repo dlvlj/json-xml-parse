@@ -16,7 +16,7 @@ export const beautify = (char: string, level: number | null = 0, enable = false)
     return DEFAULTS.EMPTY_STR;
   }
 
-  let str: string =  char;
+  let str: string = char;
 
   if (level) {
     for (let i = 0; i < level; i += 1) {
@@ -32,7 +32,7 @@ export const createEntityHandler = (entityMap: InputData) => {
 }
 
 export const checkChildTags = (data: InputData, attrKey: string, contentKey: string) => {
-  return Boolean( !!data && isObj(data) && Object.keys(data).some((tagName) => ![attrKey, contentKey].includes(tagName)))
+  return Boolean(isObj(data) && Object.keys(data).some((tagName) => ![attrKey, contentKey].includes(tagName)))
 }
 
 export const createTag = {
@@ -60,7 +60,7 @@ export const setAttributes = (attributes: InputData, setEntities:((str: string) 
 }
 
 export const checkContent = (data: InputData, attrKey: string) => {
-  if (!!data && isObj(data)) {
+  if (isObj(data)) {
     return Object.keys(data).some((key) => ![attrKey].includes(key));
   } 
   return Boolean(data);
