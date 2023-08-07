@@ -12,16 +12,20 @@ export const isArr = (val: any) => Array.isArray(val);
 export const isUndef = (val: any) => typeof val === 'undefined'
 
 export const beautify = (char: string, level: number | null = 0, enable = false): string => {
+  let str = char;
+
   if(!enable) {
     return DEFAULTS.EMPTY_STR;
   }
 
-  let str: string = char;
-
-  if (level) {
-    for (let i = 0; i < level; i += 1) {
-      str += char;
+  if(char === DEFAULTS.SPACE) {
+    str = DEFAULTS.EMPTY_STR;
+    if(level) {
+      for (let i = 0; i < level; i += 1) {
+        str += char;
+      }
     }
+    return str;
   }
   return str;
 }

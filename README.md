@@ -16,8 +16,8 @@ This is a library for converting JSON to XML
 | selfClosing | boolean | false |
 | attrKey | string | "@" |
 | contentKey | string | "#" |
-| declaration | object |
-| entityMap | object |
+| declaration | object | null |
+| entityMap | object | null |
 
 ## Usage
 
@@ -41,34 +41,34 @@ const options = {
 
 const data = {
   SolarSystem: {
-  Galaxy: "\"MilkyWay\"",
-  Star: () => "Sun",
+    Galaxy: "\"MilkyWay\"",
+    Star: () => "Sun",
     Planet: [
-   {
-    "position": "1",
-    "name": "Mercury",
-    "distance": "58",
-   },
-   {
-    "position": "2",
-    "name": "Venus",
-    "distance": "108"
-   }
-  ],
-  Planet1: {
-   "@": {
-    position: "3",
-    distance: "149"
-   },
-   name: "Earth"
-  },
-  Planet2: {
-   "@": {
-    position: "4",
-    distance: 227,
-   },
-   "#": "Mars"
-  }
+      {
+        "position": "1",
+        "name": "Mercury",
+        "distance": "58",
+      },
+      {
+        "position": "2",
+        "name": "Venus",
+        "distance": "108"
+      }
+    ],
+    Planet1: {
+      "@": {
+        position: "3",
+        distance: "149"
+      },
+      name: "Earth"
+    },
+    Planet2: {
+    "@": {
+      position: "4",
+      distance: 227,
+    },
+    "#": "Mars"
+    }
   }
 }
 
@@ -77,22 +77,22 @@ const xml = parser.jsXml.toXmlString(options,data);
 
 ```xml
 <?xml version="1.0" encoding="US-ASCII" standalone="yes"?>
- <SolarSystem>
-  <Galaxy>&#34;MilkyWay&#34;</Galaxy>
-  <Star>Sun</Star>
-  <Planet>
-   <position>1</position>
-   <name>Mercury</name>
-   <distance>58</distance>
-  </Planet>
-  <Planet>
-   <position>2</position>
-   <name>Venus</name>
-   <distance>108</distance>
-  </Planet>
-  <Planet1 position="3" distance="149">
-   <name>Earth</name>
-  </Planet1>
-  <Planet2 position="4" distance="227">Mars</Planet2>
- </SolarSystem>
+<SolarSystem>
+	<Galaxy>&#34;MilkyWay&#34;</Galaxy>
+	<Star>Sun</Star>
+	<Planet>
+		<position>1</position>
+		<name>Mercury</name>
+		<distance>58</distance>
+	</Planet>
+	<Planet>
+		<position>2</position>
+		<name>Venus</name>
+		<distance>108</distance>
+	</Planet>
+	<Planet1 position="3" distance="149">
+		<name>Earth</name>
+	</Planet1>
+	<Planet2 position="4" distance="227">Mars</Planet2>
+</SolarSystem>
 ```
