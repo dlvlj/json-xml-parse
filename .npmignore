@@ -3,7 +3,7 @@ src
 build
 test
 .editorconfig
-.eslintrc
+.eslintrc.js
 .gitignore
 tsconfig.json
 yarn.lock
