@@ -1,4 +1,4 @@
-import { InputData, TagProps } from './js-xml/interface';
+import { InputData, DeclarationData, TagProps } from './js-xml/interface';
 import { DEFAULTS, TAGS } from "./constants";
 
 export const isObj = (val: any) => typeof val === 'object';
@@ -70,7 +70,7 @@ export const checkContent = (data: InputData, attrKey: string) => {
   return Boolean(data);
 }
 
-export const setDeclaration = (decAttrs: InputData | void, setEntities: ((str: string) => string) | undefined, beauti = false): string => {
+export const setDeclaration = (decAttrs: DeclarationData | void, setEntities: ((str: string) => string) | undefined, beauti = false): string => {
   const attrs = {
     ...DEFAULTS.DECLARATION,
     ...(isObj(decAttrs)? decAttrs : {})

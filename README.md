@@ -16,7 +16,7 @@ This is a library for converting JSON to XML
 | selfClosing | boolean | false |
 | attrKey | string | "@" |
 | contentKey | string | "#" |
-| declaration | object | null |
+| declaration | object | `{ version: "1.0" }` |
 | entityMap | object | null |
 
 ## Usage
