@@ -1,12 +1,13 @@
 # Transform JSON to XML
 
-This is a library for converting JSON to XML
+A library for lightning-fast JSON-to-XML transformations.
 
 ## Main Features
 
-* Converts JSON to XML and HTML fast.
-* Works in CLI and Browser.
-* Light weight.
+* Fast Conversion
+* Dependency-Free
+* CLI and Browser Support
+* Lightweight
 
 ## Options
 
