@@ -1,7 +1,7 @@
 import { InputData, DeclarationData, TagProps } from './js-xml/interface';
 import { DEFAULTS, TAGS } from "./constants";
 
-export const isObj = (val: any) => typeof val === 'object';
+export const isObj = (val: any) => !!val && typeof val === 'object';
 
 export const isFunc = (val: any) => typeof val === 'function';
 

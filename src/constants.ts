@@ -11,5 +11,9 @@ export const DEFAULTS = {
   EMPTY_STR: '',
   DECLARATION: {
     version: '1.0'
+  },
+  ENTITY_MAP: {
+    "<": "&lt;",
+    ">": "&gt;"
   }
 }

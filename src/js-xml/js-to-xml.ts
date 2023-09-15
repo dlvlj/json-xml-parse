@@ -5,7 +5,12 @@ import { TAGS, DEFAULTS} from '../constants';
 export default (props: Partial<InputProps>, jsonData: InputData): string => {
   const attrKey: string = props?.attrKey || DEFAULTS.ATTR_KEY;
   const contentKey: string = props?.contentKey || DEFAULTS.CONTENT_KEY;
-  const setEntities = createEntityHandler(props?.entityMap || {});
+  const setEntities = createEntityHandler(
+    {
+      ...DEFAULTS.ENTITY_MAP,
+      ...(props?.entityMap || {})
+    }
+  );
   let xmlString: string = setDeclaration(props?.declaration, setEntities, props?.beautify);
 
   const generateXmlString = (key: string, data: any, level: number) => {

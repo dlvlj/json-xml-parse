@@ -1,3 +1,6 @@
 node_modules
 lib
 dist
+.DS_Store
+*.tgz
+pnpm-lock.yaml

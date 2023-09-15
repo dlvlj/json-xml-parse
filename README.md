@@ -16,8 +16,8 @@ This is a library for converting JSON to XML
 | selfClosing | boolean | false |
 | attrKey | string | "@" |
 | contentKey | string | "#" |
-| declaration | object | `{ version: "1.0" }` |
-| entityMap | object | null |
+| declaration | object | `{ "version": "1.0" }` |
+| entityMap | object | `{"<": "&lt;", ">": "&gt;"}` |
 
 ## Usage
 
@@ -46,7 +46,7 @@ const data = {
     Planet: [
       {
         "position": "1",
-        "name": "Mercury",
+        "name": "<Mercury>",
         "distance": "58",
       },
       {
@@ -67,7 +67,19 @@ const data = {
       position: "4",
       distance: 227,
     },
-    "#": "Mars"
+    "#": {
+        name: {
+          "#" : 'mars',
+          "@": {
+            "has-water": 'true'
+          },
+        },
+        moon: [
+          'Phobos',
+          'Europa',
+          'Deimos'
+        ]
+      }
     }
   }
 }
@@ -78,21 +90,26 @@ const xml = parser.jsXml.toXmlString(options,data);
 ```xml
 <?xml version="1.0" encoding="US-ASCII" standalone="yes"?>
 <SolarSystem>
-	<Galaxy>&#34;MilkyWay&#34;</Galaxy>
-	<Star>Sun</Star>
-	<Planet>
-		<position>1</position>
-		<name>Mercury</name>
-		<distance>58</distance>
-	</Planet>
-	<Planet>
-		<position>2</position>
-		<name>Venus</name>
-		<distance>108</distance>
-	</Planet>
-	<Planet1 position="3" distance="149">
-		<name>Earth</name>
-	</Planet1>
-	<Planet2 position="4" distance="227">Mars</Planet2>
+ <Galaxy>&#34;MilkyWay&#34;</Galaxy>
+ <Star>Sun</Star>
+ <Planet>
+  <position>1</position>
+  <name>&lt;Mercury&gt;</name>
+  <distance>58</distance>
+ </Planet>
+ <Planet>
+  <position>2</position>
+  <name>Venus</name>
+  <distance>108</distance>
+ </Planet>
+ <Planet1 position="3" distance="149">
+  <name>Earth</name>
+ </Planet1>
+ <Planet2 position="4" distance="227">
+  <name has-water="true">mars</name>
+  <moon>Phobos</moon>
+  <moon>Europa</moon>
+  <moon>Deimos</moon>
+ </Planet2>
 </SolarSystem>
 ```
