@@ -1,5 +1,6 @@
 import { InputProps, InputData } from './interface';
-import { isObj, isArr, beautify, createEntityHandler, checkChildTags, createTag, setStringVal, checkContent, setDeclaration } from '../utils';
+import { beautify, createEntityHandler, checkChildTags, createTag, setStringVal, checkContent, setDeclaration } from './utils';
+import { isObj, isArr } from '../utils';
 import { TAGS, DEFAULTS} from '../constants';
 
 export default (props: Partial<InputProps>, jsonData: InputData): string => {
@@ -28,15 +29,16 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
 
     const attributes = data?.[attrKey] || {};
 
-    // If the content is missing and self-closing tags are enabled
+    // checks for missing content key and self-closing tag
     if (!checkContent(data, attrKey) && props.selfClosing) {
       xmlString += createTag[TAGS.SELF_CLOSING]({attributes, level, name: key, setEntities, beautify: props?.beautify})
       return;
     }
-    // Opening tag
+
+    // creates opening tag
     xmlString += key && createTag[TAGS.OPENING]({attributes, level, name: key, setEntities, beautify: props?.beautify}) || ''
 
-    const hasChidTags: boolean = checkChildTags(data, attrKey, contentKey); //doesnt check for nested content key
+    const hasChidTags: boolean = checkChildTags(data, attrKey, contentKey);
     const content = !!data && isObj(data) ? data[contentKey] : data;
     const contentIsNested = Boolean(isObj(content) && Object.keys(content).length);
 
