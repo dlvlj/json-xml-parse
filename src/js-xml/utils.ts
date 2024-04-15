@@ -54,7 +54,7 @@ export const setAttributes = (attributes: InputData, setEntities:((str: string) 
   return str;
 }
 
-export const checkContent = (data: InputData, attrKey: string) => {
+export const hasTagContent = (data: InputData, attrKey: string) => {
   if (isObj(data)) {
     return Object.keys(data).some((key) => key !== attrKey);
   } 

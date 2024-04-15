@@ -1,5 +1,5 @@
 import { InputProps, InputData } from './interface';
-import { beautify, createEntityHandler, checkChildTags, createTag, setStringVal, checkContent, setDeclaration } from './utils';
+import { beautify, createEntityHandler, checkChildTags, createTag, setStringVal, hasTagContent, setDeclaration } from './utils';
 import { isObj, isArr } from '../utils';
 import { TAGS, DEFAULTS} from '../constants';
 
@@ -31,7 +31,7 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
     const attributes = data?.[attrKey] || {};
 
     // checks for missing content key and self-closing tag
-    if (!checkContent(data, attrKey) && props.selfClosing) {
+    if (!hasTagContent(data, attrKey) && props.selfClosing) {
       xmlString += createTag[TAGS.SELF_CLOSING]({attributes, level, name: key, setEntities, beautify: props?.beautify})
       return;
     }
