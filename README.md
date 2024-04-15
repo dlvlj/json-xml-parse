@@ -14,7 +14,6 @@ A library for lightning-fast JSON-to-XML transformations.
 | Name | Type | Default
 |---|---|---|
 | beautify | boolean | false |
-| selfClosing | boolean | false |
 | attrKey | string | "@" |
 | contentKey | string | "#" |
 | declaration | object | `{ "version": "1.0" }` |
@@ -27,7 +26,6 @@ const parser = require('json-xml-parse');
 
 const options = {
   beautify: true,
-  selfClosing: true,
   attrKey: "@",
   contentKey: "#",
   entityMap: {

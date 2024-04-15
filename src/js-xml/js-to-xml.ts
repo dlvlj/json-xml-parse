@@ -30,11 +30,11 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
 
     const attributes = data?.[attrKey] || {};
 
-    // checks for missing tag content and self-closing option
-    if (!hasTagContent(data, attrKey) && props.selfClosing) {
-      xmlString += createTag[TAGS.SELF_CLOSING]({attributes, level, name: key, setEntities, beautify: props?.beautify})
-      return;
-    }
+    // // checks for missing tag content and self-closing option
+    // if (!hasTagContent(data, attrKey) && props.selfClosing) {
+    //   xmlString += createTag[TAGS.SELF_CLOSING]({attributes, level, name: key, setEntities, beautify: props?.beautify})
+    //   return;
+    // }
 
     // creates opening tag
     xmlString += key && createTag[TAGS.OPENING]({attributes, level, name: key, setEntities, beautify: props?.beautify}) || ''

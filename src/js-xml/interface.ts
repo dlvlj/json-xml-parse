@@ -13,7 +13,7 @@ export interface DeclarationData extends InputData {
 export interface InputProps {
   beautify?: boolean
   entityMap?: InputData
-  selfClosing?: boolean
+  // selfClosing?: boolean
   attrKey?: string
   contentKey?: string,
   declaration?: DeclarationData
