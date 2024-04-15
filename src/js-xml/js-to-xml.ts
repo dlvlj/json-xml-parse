@@ -1,5 +1,5 @@
 import { InputProps, InputData } from './interface';
-import { beautify, createEntityHandler, checkChildTags, createTag, setStringVal, hasTagContent, setDeclaration } from './utils';
+import { beautify, createEntityHandler, checkChildTags, createTag, setStringVal, setDeclaration } from './utils';
 import { isObj, isArr } from '../utils';
 import { TAGS, DEFAULTS} from '../constants';
 

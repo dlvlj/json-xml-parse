@@ -54,12 +54,12 @@ export const setAttributes = (attributes: InputData, setEntities:((str: string) 
   return str;
 }
 
-export const hasTagContent = (data: InputData, attrKey: string) => {
-  if (isObj(data)) {
-    return Object.keys(data).some((key) => key !== attrKey);
-  } 
-  return Boolean(data);
-}
+// export const hasTagContent = (data: InputData, attrKey: string) => {
+//   if (isObj(data)) {
+//     return Object.keys(data).some((key) => key !== attrKey);
+//   } 
+//   return Boolean(data);
+// }
 
 export const setDeclaration = (decAttrs: DeclarationData | void, setEntities: ((str: string) => string) | undefined, beauti = false): string => {
   const attrs = {
