@@ -23,6 +23,7 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
       return;
     }
 
+    // to avoid tag creation for attributes and tag content
     if ([attrKey, contentKey].includes(key)) {
       return;
     }
