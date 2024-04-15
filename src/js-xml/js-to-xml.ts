@@ -30,7 +30,7 @@ export default (props: Partial<InputProps>, jsonData: InputData): string => {
 
     const attributes = data?.[attrKey] || {};
 
-    // checks for missing content key and self-closing tag
+    // checks for missing tag content and self-closing option
     if (!hasTagContent(data, attrKey) && props.selfClosing) {
       xmlString += createTag[TAGS.SELF_CLOSING]({attributes, level, name: key, setEntities, beautify: props?.beautify})
       return;
