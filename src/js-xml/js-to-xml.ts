@@ -3,7 +3,7 @@ import { beautify, createEntityHandler, checkChildTags, createTag, setStringVal,
 import { isObj, isArr } from '../utils';
 import { TAGS, DEFAULTS} from '../constants';
 
-export default (props: Partial<InputProps>, jsonData: InputData): string => {
+export default (jsonData: InputData, props: Partial<InputProps>): string => {
   const attrKey: string = props?.attrKey || DEFAULTS.ATTR_KEY;
   const contentKey: string = props?.contentKey || DEFAULTS.CONTENT_KEY;
   const setEntities = createEntityHandler(
