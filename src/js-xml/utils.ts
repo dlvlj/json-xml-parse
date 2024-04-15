@@ -56,7 +56,7 @@ export const setAttributes = (attributes: InputData, setEntities:((str: string) 
 
 export const checkContent = (data: InputData, attrKey: string) => {
   if (isObj(data)) {
-    return Object.keys(data).some((key) => ![attrKey].includes(key));
+    return Object.keys(data).some((key) => key !== attrKey);
   } 
   return Boolean(data);
 }
