@@ -27,3 +27,6 @@ export interface TagProps {
   setEntities: (str: string) => string,
   beautify: boolean
 }
+export interface TypeHandler {
+  (data: any) : [boolean, any]
+}

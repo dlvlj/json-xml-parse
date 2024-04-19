@@ -1,9 +1,13 @@
-import { InputProps, InputData } from './interface';
+import { InputProps, InputData, TypeHandler } from './interface';
 import { beautify, createEntityHandler, checkChildTags, createTag, setStringVal, setDeclaration } from './utils';
 import { isObj, isArr } from '../utils';
 import { TAGS, DEFAULTS} from '../constants';
 
-export default (jsonData: InputData, props: Partial<InputProps>): string => {
+export default (
+  jsonData: InputData,
+  props: Partial<InputProps>,
+  typeHandler: TypeHandler = DEFAULTS.TYPE_HANDLER
+): string => {
   const attrKey: string = props?.attrKey || DEFAULTS.ATTR_KEY;
   const contentKey: string = props?.contentKey || DEFAULTS.CONTENT_KEY;
   const setEntities = createEntityHandler(
@@ -23,12 +27,14 @@ export default (jsonData: InputData, props: Partial<InputProps>): string => {
       return;
     }
 
-    // to avoid tag creation for attributes and tag content
-    if ([attrKey, contentKey].includes(key)) {
+    const [tag, filteredData] = typeHandler(data);
+
+    // to avoid tag creation
+    if (!tag || [attrKey, contentKey].includes(key)) {
       return;
     }
 
-    const attributes = data?.[attrKey] || {};
+    const attributes = filteredData?.[attrKey] || {};
 
     // // checks for missing tag content and self-closing option
     // if (!hasTagContent(data, attrKey) && props.selfClosing) {
@@ -39,15 +45,15 @@ export default (jsonData: InputData, props: Partial<InputProps>): string => {
     // creates opening tag
     xmlString += key && createTag[TAGS.OPENING]({attributes, level, name: key, setEntities, beautify: props?.beautify}) || ''
 
-    const hasChidTags: boolean = checkChildTags(data, attrKey, contentKey);
-    const content = !!data && isObj(data) ? data[contentKey] : data;
+    const hasChidTags: boolean = checkChildTags(filteredData, attrKey, contentKey);
+    const content = !!filteredData && isObj(filteredData) ? filteredData[contentKey] : filteredData;
     const contentIsNested = Boolean(isObj(content) && Object.keys(content).length);
 
     if(hasChidTags){
       xmlString += beautify(DEFAULTS.NEW_LINE, null, props?.beautify);
       // Generate child tags recursively
-      Object.keys(data).forEach((k) => {
-        generateXmlString(k, data[k], level + 1);
+      Object.keys(filteredData).forEach((k) => {
+        generateXmlString(k, filteredData[k], level + 1);
       });
     } else {
       // Content value

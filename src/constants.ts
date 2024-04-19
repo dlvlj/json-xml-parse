@@ -15,5 +15,6 @@ export const DEFAULTS = {
   ENTITY_MAP: {
     "<": "&lt;",
     ">": "&gt;"
-  }
+  },
+  TYPE_HANDLER: (val: any): [boolean, any] => [true, val]
 }

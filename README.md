@@ -9,7 +9,7 @@ A library for lightning-fast JSON-to-XML transformations.
 * CLI and Browser Support
 * Lightweight
 
-## Options
+## Options (optional)
 
 | Name | Type | Default
 |---|---|---|
@@ -18,6 +18,14 @@ A library for lightning-fast JSON-to-XML transformations.
 | contentKey | string | "#" |
 | declaration | object | `{ "version": "1.0" }` |
 | entityMap | object | `{"<": "&lt;", ">": "&gt;"}` |
+
+## Type Handling (optional)
+```js
+const typeHandler = (val) => [true, val]; // default
+// triggered for every nested property in the JSON data
+// first param -> to create tag or not
+// second param -> to return modified data
+```
 
 ## Usage
 
@@ -36,6 +44,13 @@ const options = {
     encoding:'US-ASCII',
     standalone: 'yes'
   }
+}
+
+const typeHandler = (val) => {
+  if(val === 'earth') {
+    return [!!val, 'EARTH']
+  }
+  return [!!val, val]
 }
 
 const data = {
@@ -83,7 +98,7 @@ const data = {
   }
 }
 
-const xml = parser.jsXml.toXmlString(options,data);
+const xml = parser.jsXml.toXmlString(data, options, typeHandler);
 ```
 
 ```xml
@@ -102,7 +117,7 @@ const xml = parser.jsXml.toXmlString(options,data);
   <distance>108</distance>
  </Planet>
  <Planet1 position="3" distance="149">
-  <name>Earth</name>
+  <name>EARTH</name>
  </Planet1>
  <Planet2 position="4" distance="227">
   <name has-water="true">mars</name>
