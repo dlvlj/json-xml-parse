@@ -1,6 +1,6 @@
 # Transform JSON to XML
 
-A library for lightning-fast JSON-to-XML transformations.
+A library for fast JSON to XML transformations.
 
 ## Main Features
 
@@ -18,19 +18,28 @@ A library for lightning-fast JSON-to-XML transformations.
 | contentKey | string | "#" |
 | declaration | object | `{ "version": "1.0" }` |
 | entityMap | object | `{"<": "&lt;", ">": "&gt;"}` |
+| typeHandler | function | null |
 
-## Type Handling (optional)
+## Type Handling
 ```js
-const typeHandler = (val) => [true, val]; // default
+const typeHandler = (v) => [true, v]; // default
 // triggered for every nested property in the JSON data
-// first param -> to create tag or not
-// second param -> to return modified data
+// first param -> Boolean for tag creation
+// second param -> modified value
 ```
 
 ## Usage
 
 ```js
 const parser = require('json-xml-parse');
+
+const typeHandler = (v) => {
+  switch(v) {
+    case 'Earth': return [true, 'EARTH'];
+    case 'mars': return [false];
+    default: return [!!v, v] 
+  }
+}
 
 const options = {
   beautify: true,
@@ -43,14 +52,8 @@ const options = {
   declaration: {
     encoding:'US-ASCII',
     standalone: 'yes'
-  }
-}
-
-const typeHandler = (val) => {
-  if(val === 'earth') {
-    return [!!val, 'EARTH']
-  }
-  return [!!val, val]
+  },
+  typeHandler
 }
 
 const data = {
@@ -89,7 +92,7 @@ const data = {
           },
         },
         moon: [
-          'Phobos',
+          undefined,
           'Europa',
           'Deimos'
         ]
@@ -98,7 +101,7 @@ const data = {
   }
 }
 
-const xml = parser.jsXml.toXmlString(data, options, typeHandler);
+const xml = parser.jsXml.toXmlString(data, options);
 ```
 
 ```xml

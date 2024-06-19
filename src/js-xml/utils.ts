@@ -1,6 +1,6 @@
 import { InputData, DeclarationData, TagProps } from './interface';
 import { DEFAULTS, TAGS } from "../constants";
-import { isObj, isFunc, isStr} from '../utils'
+import { isObj, isFunc, isStr, isArr} from '../utils'
 
 export const beautify = (char: string, level: number | null = 0, enable = false): string => {
   let str = char;
@@ -27,7 +27,9 @@ export const createEntityHandler = (entityMap: InputData) => {
 }
 
 export const checkChildTags = (data: InputData, attrKey: string, contentKey: string) => {
-  return Boolean(isObj(data) && Object.keys(data).some((tagName) => ![attrKey, contentKey].includes(tagName)))
+  const dataKeys = isObj(data) && !isArr(data)? Object.keys(data) : []
+  return Boolean(dataKeys.length && (dataKeys.find((k) => k === contentKey && isObj(data[k])) || dataKeys.some((k) => ![attrKey, contentKey].includes(k))) )
+  // return Boolean(isObj(data) && Object.keys(data).length && Object.keys(data).some((key) => ![attrKey, contentKey].includes(key)))
 }
 
 export const createTag = {
@@ -36,12 +38,12 @@ export const createTag = {
   [TAGS.CLOSING]: (tagProps: Partial<TagProps>): string => `${tagProps.hasChidTags ? beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify) : DEFAULTS.EMPTY_STR}</${tagProps.name}>${beautify(DEFAULTS.NEW_LINE, null, tagProps.beautify)}`
 }
 
-export const setStringVal = (inputData: any, doubleQuotes: boolean, setEntities:((str: string) => string) | undefined): string => {
-  let strVal = isFunc(inputData) ? inputData() : inputData;
-  if (isStr(strVal)) {
-    strVal = setEntities && setEntities(strVal);
+export const setStringVal = (inputData: any, quotationMarks: boolean, setEntities:((str: string) => string) | undefined): string => {
+  let v = isFunc(inputData) ? inputData() : inputData;
+  if (isStr(v)) {
+    v = setEntities && setEntities(v);
   }
-  return doubleQuotes ? `"${strVal}"` : `${strVal}`;
+  return quotationMarks ? `"${v}"` : `${v}`;
 }
 
 export const setAttributes = (attributes: InputData, setEntities:((str: string) => string) | undefined): string => {
@@ -53,13 +55,6 @@ export const setAttributes = (attributes: InputData, setEntities:((str: string) 
   }
   return str;
 }
-
-// export const hasTagContent = (data: InputData, attrKey: string) => {
-//   if (isObj(data)) {
-//     return Object.keys(data).some((key) => key !== attrKey);
-//   } 
-//   return Boolean(data);
-// }
 
 export const setDeclaration = (decAttrs: DeclarationData | void, setEntities: ((str: string) => string) | undefined, beauti = false): string => {
   const attrs = {
