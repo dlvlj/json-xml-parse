@@ -5,56 +5,26 @@ A library for fast JSON to XML transformations.
 ## Main Features
 
 * Fast Conversion
+* Lightweight
 * Dependency-Free
 * CLI and Browser Support
-* Lightweight
 
-## Options (optional)
+## Options
 
 | Name | Type | Default
 |---|---|---|
-| beautify | boolean | false |
-| attrKey | string | "@" |
-| contentKey | string | "#" |
-| declaration | object | `{ "version": "1.0" }` |
-| entityMap | object | `{"<": "&lt;", ">": "&gt;"}` |
-| typeHandler | function | null |
-
-## Type Handling
-```js
-const typeHandler = (v) => [true, v]; // default
-// triggered for every nested property in the JSON data
-// first param -> Boolean for tag creation
-// second param -> modified value
-```
+| attrKey | str | "@" |
+| contentKey | str | "#" |
+| beautify | bool | true |
+| selfClosing | bool | true |
+| typeHandler | func | (v) => [true, v] |
+| declaration | obj | `{ "version": "1.0" }` |
+| entityMap | obj | `{ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", "\"": "&quot;"}` |
 
 ## Usage
 
 ```js
 const parser = require('json-xml-parse');
-
-const typeHandler = (v) => {
-  switch(v) {
-    case 'Earth': return [true, 'EARTH'];
-    case 'mars': return [false];
-    default: return [!!v, v] 
-  }
-}
-
-const options = {
-  beautify: true,
-  attrKey: "@",
-  contentKey: "#",
-  entityMap: {
-    '"': "&#34;",
-    "&": "&#38;"
-  },
-  declaration: {
-    encoding:'US-ASCII',
-    standalone: 'yes'
-  },
-  typeHandler
-}
 
 const data = {
   SolarSystem: {
@@ -101,13 +71,13 @@ const data = {
   }
 }
 
-const xml = parser.jsXml.toXmlString(data, options);
+const xml = parser.jsXml.toXmlString(data);
 ```
 
 ```xml
-<?xml version="1.0" encoding="US-ASCII" standalone="yes"?>
+<?xml version="1.0"?>
 <SolarSystem>
- <Galaxy>&#34;MilkyWay&#34;</Galaxy>
+ <Galaxy>&quot;MilkyWay&quot;</Galaxy>
  <Star>Sun</Star>
  <Planet>
   <position>1</position>
@@ -120,13 +90,54 @@ const xml = parser.jsXml.toXmlString(data, options);
   <distance>108</distance>
  </Planet>
  <Planet1 position="3" distance="149">
-  <name>EARTH</name>
+  <name>Earth</name>
  </Planet1>
  <Planet2 position="4" distance="227">
   <name has-water="true">mars</name>
-  <moon>Phobos</moon>
+  <moon/>
   <moon>Europa</moon>
   <moon>Deimos</moon>
  </Planet2>
+</SolarSystem>
+```
+
+## Type Handling
+
+```js
+const options = {
+  typeHandler: (v) => [true, v]; 
+  // return [<bool for creating tag>, <value>]
+  // runs for every nested property
+}
+```
+
+## Using Options
+
+```js
+const Options = {
+  beautify: true,
+  selfClosing: true,
+  typeHandler: (v) => {
+    if([undefined, null, ''].includes(v)) {
+      return [false, v]
+    }
+    return [true, v]
+  }
+}
+
+const data = {
+  SolarSystem: {
+    Galaxy: undefined,
+    Star: () => null,
+    Planet: 'Earth'
+  }
+}
+const xml = parser.jsXml.toXmlString(data, Options);
+```
+
+```xml
+<?xml version="1.0"?>
+<SolarSystem>
+ <Planet>Earth</Planet>
 </SolarSystem>
 ```

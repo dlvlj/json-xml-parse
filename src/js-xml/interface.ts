@@ -20,7 +20,8 @@ export interface InputProps {
   attrKey?: string
   contentKey?: string,
   declaration?: DeclarationData,
-  typeHandler: TypeHandler
+  typeHandler?: TypeHandler,
+  selfClosing: boolean
 }
 export interface TagProps {
   name: string,
@@ -29,5 +30,6 @@ export interface TagProps {
   hasChidTags: boolean
   content: any
   beautify: boolean,
-  setEntities: SetEntities
+  setEntities: SetEntities,
+  selfClosing: boolean
 }
