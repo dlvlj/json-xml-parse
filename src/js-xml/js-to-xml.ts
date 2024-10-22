@@ -1,74 +1,73 @@
 import { InputProps, InputData } from './interface';
-import { isObj, isArr, beautify, createEntityHandler, checkChildTags, createTag, setStringVal, checkContent, setDeclaration } from '../utils';
+import { beautify, createEntityHandler, checkChildTags, createTag, setStringVal, setDeclaration } from './utils';
+import { isObj, isArr, isFunc, keyExists, objIsEmpty } from '../utils';
 import { TAGS, DEFAULTS} from '../constants';
 
-export default (props: Partial<InputProps>, jsonData: InputData): string => {
+export default (
+  jsonData: InputData = DEFAULTS.EMPTY_OBJ,
+  props: Partial<InputProps> = DEFAULTS.EMPTY_OBJ,
+): string => {
   const attrKey: string = props?.attrKey || DEFAULTS.ATTR_KEY;
   const contentKey: string = props?.contentKey || DEFAULTS.CONTENT_KEY;
   const setEntities = createEntityHandler(
     {
-      ...DEFAULTS.ENTITY_MAP,
-      ...(props?.entityMap || {})
+      ...(isObj(props?.entityMap) ? props?.entityMap : DEFAULTS.ENTITY_MAP)
     }
   );
   let xmlString: string = setDeclaration(props?.declaration, setEntities, props?.beautify);
 
   const generateXmlString = (key: string, data: any, level: number) => {
-    // Handles an array of tags
-    if(isArr(data)) {
-      data.forEach((d: any) => {
-        generateXmlString(key, d, level);
-      });
+        
+    const tagAttr = data?.[attrKey] || DEFAULTS.EMPTY_OBJ;
+    let contentData = keyExists(data, contentKey) ? data[contentKey] : data;
+    contentData = isFunc(contentData) ? contentData() : contentData;
+    let [makeTag, tagContent] = isFunc(props?.typeHandler) ? props.typeHandler?.call(DEFAULTS.EMPTY_OBJ, contentData) : [DEFAULTS.MAKE_TAG, contentData];
+    tagContent = objIsEmpty(tagContent) ? DEFAULTS.EMPTY_STR : tagContent //sets value as empty str for empty obj
+    const hasChidTags = checkChildTags(tagContent, attrKey, contentKey);
+    const selfClosing = (keyExists(props, 'selfClosing')? props.selfClosing : DEFAULTS.SELF_CLOSING.ENABLE) && [undefined, null, ''].includes(tagContent);
+
+    // to avoid tag creation
+    if (!makeTag || [attrKey, contentKey].includes(key)) {
       return;
     }
 
-    if ([attrKey, contentKey].includes(key)) {
-      return;
+    // opening/selfClosing tag
+    if(!isArr(tagContent)) {
+      xmlString += key && createTag[TAGS.OPENING]({attributes: tagAttr, level, name: key, setEntities, beautify: props?.beautify, selfClosing}) || DEFAULTS.EMPTY_STR;
+      if(selfClosing) {
+        return;
+      }
     }
-
-    const attributes = data?.[attrKey] || {};
-
-    // If the content is missing and self-closing tags are enabled
-    if (!checkContent(data, attrKey) && props.selfClosing) {
-      xmlString += createTag[TAGS.SELF_CLOSING]({attributes, level, name: key, setEntities, beautify: props?.beautify})
-      return;
-    }
-    // Opening tag
-    xmlString += key && createTag[TAGS.OPENING]({attributes, level, name: key, setEntities, beautify: props?.beautify}) || ''
-
-    const hasChidTags: boolean = checkChildTags(data, attrKey, contentKey); //doesnt check for nested content key
-    const content = !!data && isObj(data) ? data[contentKey] : data;
-    const contentIsNested = Boolean(isObj(content) && Object.keys(content).length);
-
+    
     if(hasChidTags){
-      xmlString += beautify(DEFAULTS.NEW_LINE, null, props?.beautify);
-      // Generate child tags recursively
-      Object.keys(data).forEach((k) => {
-        generateXmlString(k, data[k], level + 1);
-      });
+      // generate child tags recursively
+      if(isArr(tagContent)) {
+        tagContent.forEach((d: InputData) => {
+          generateXmlString(key, d, level);
+        });
+      } else {
+        xmlString += beautify(DEFAULTS.NEW_LINE, DEFAULTS.LEVEL.INIT, props?.beautify);
+        Object.keys(tagContent).forEach((k) => {
+          generateXmlString(k, tagContent[k], level + DEFAULTS.LEVEL.INCREMENT);
+        }); 
+      }
     } else {
-      // Content value
-      if(contentIsNested) {
-        generateXmlString('', content, level);
-      } else
-      xmlString += setStringVal(content, false, setEntities);
+      xmlString += setStringVal(tagContent, DEFAULTS.DOUBLE_QUOTES.DIASBLE, setEntities);
     }
-    // Closing tag
-    xmlString += key && createTag[TAGS.CLOSING]({ level, hasChidTags: hasChidTags || contentIsNested, name: key, setEntities, beautify: props?.beautify}) ||''
+
+    // closing tag
+    if(!isArr(tagContent)) {
+      xmlString += key && createTag[TAGS.CLOSING]({ level, hasChidTags: hasChidTags, name: key, setEntities, beautify: props?.beautify}) || DEFAULTS.EMPTY_STR
+    }
   }
 
-  const parseToXml = (data: InputData): string => {
-    // If the input data is JSON Array
-    if(isArr(data)) 
-      data.forEach((d: InputData, i: number) => {
-        generateXmlString(String(i), d, 0);
-      });
-    // If the input data is JSON Object
-    else 
+  const parseToXML = (data: InputData): string => {
+    if(isObj(data)) {
       Object.keys(data).forEach((key) => {
-        generateXmlString(key, data[key], 0);
+        generateXmlString(key, data[key], DEFAULTS.LEVEL.INIT);
       });
+    }
     return xmlString;
   }
-  return parseToXml(jsonData);
+  return parseToXML(jsonData);
 }

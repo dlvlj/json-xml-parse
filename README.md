@@ -1,44 +1,30 @@
 # Transform JSON to XML
 
-A library for lightning-fast JSON-to-XML transformations.
+A library for fast JSON to XML transformations.
 
 ## Main Features
 
 * Fast Conversion
+* Lightweight
 * Dependency-Free
 * CLI and Browser Support
-* Lightweight
 
 ## Options
 
 | Name | Type | Default
 |---|---|---|
-| beautify | boolean | false |
-| selfClosing | boolean | false |
-| attrKey | string | "@" |
-| contentKey | string | "#" |
-| declaration | object | `{ "version": "1.0" }` |
-| entityMap | object | `{"<": "&lt;", ">": "&gt;"}` |
+| attrKey | str | "@" |
+| contentKey | str | "#" |
+| beautify | bool | true |
+| selfClosing | bool | true |
+| typeHandler | func | (v) => [true, v] |
+| declaration | obj | `{ "version": "1.0" }` |
+| entityMap | obj | `{ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", "\"": "&quot;"}` |
 
 ## Usage
 
 ```js
 const parser = require('json-xml-parse');
-
-const options = {
-  beautify: true,
-  selfClosing: true,
-  attrKey: "@",
-  contentKey: "#",
-  entityMap: {
-    '"': "&#34;",
-    "&": "&#38;"
-  },
-  declaration: {
-    encoding:'US-ASCII',
-    standalone: 'yes'
-  }
-}
 
 const data = {
   SolarSystem: {
@@ -76,7 +62,7 @@ const data = {
           },
         },
         moon: [
-          'Phobos',
+          undefined,
           'Europa',
           'Deimos'
         ]
@@ -85,13 +71,13 @@ const data = {
   }
 }
 
-const xml = parser.jsXml.toXmlString(options,data);
+const xml = parser.jsXml.toXmlString(data);
 ```
 
 ```xml
-<?xml version="1.0" encoding="US-ASCII" standalone="yes"?>
+<?xml version="1.0"?>
 <SolarSystem>
- <Galaxy>&#34;MilkyWay&#34;</Galaxy>
+ <Galaxy>&quot;MilkyWay&quot;</Galaxy>
  <Star>Sun</Star>
  <Planet>
   <position>1</position>
@@ -108,9 +94,50 @@ const xml = parser.jsXml.toXmlString(options,data);
  </Planet1>
  <Planet2 position="4" distance="227">
   <name has-water="true">mars</name>
-  <moon>Phobos</moon>
+  <moon/>
   <moon>Europa</moon>
   <moon>Deimos</moon>
  </Planet2>
+</SolarSystem>
+```
+
+## Type Handling
+
+```js
+const options = {
+  typeHandler: (v) => [true, v]; 
+  // return [<bool for creating tag>, <value>]
+  // runs for every nested property
+}
+```
+
+## Using Options
+
+```js
+const Options = {
+  beautify: true,
+  selfClosing: true,
+  typeHandler: (v) => {
+    if([undefined, null, ''].includes(v)) {
+      return [false, v]
+    }
+    return [true, v]
+  }
+}
+
+const data = {
+  SolarSystem: {
+    Galaxy: undefined,
+    Star: () => null,
+    Planet: 'Earth'
+  }
+}
+const xml = parser.jsXml.toXmlString(data, Options);
+```
+
+```xml
+<?xml version="1.0"?>
+<SolarSystem>
+ <Planet>Earth</Planet>
 </SolarSystem>
 ```
