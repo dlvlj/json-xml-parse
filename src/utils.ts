@@ -1,5 +1,5 @@
-const emptyStrObj = '{}';
-const emptyStrArr = '[]';
+const emptyObjStr = '{}';
+const emptyArrStr = '[]';
 
 export const isObj = (val: any) => !!val && typeof val === 'object';
 
@@ -11,6 +11,6 @@ export const isArr = (val: any) => Array.isArray(val);
 
 export const isUndef = (val: any) => typeof val === 'undefined';
 
-export const keyExists = (val: object, key: string) => isObj(val) && key in val;
+export const keyIn = (val: object, key: string) => isObj(val) && key in val;
 
-export const objIsEmpty = (val: object) => isObj(val) && [emptyStrObj, emptyStrArr].includes(JSON.stringify(val));
+export const isEmptyObj = (val: object) => isObj(val) && [emptyObjStr, emptyArrStr].includes(JSON.stringify(val));

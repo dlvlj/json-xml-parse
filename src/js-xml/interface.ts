@@ -27,7 +27,7 @@ export interface TagProps {
   name: string,
   attributes: any
   level: number
-  hasChidTags: boolean
+  nestedTags: boolean
   content: any
   beautify: boolean,
   setEntities: SetEntities,

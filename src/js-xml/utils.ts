@@ -1,6 +1,6 @@
 import { InputData, DeclarationData, TagProps } from './interface';
 import { DEFAULTS, TAGS } from "../constants";
-import { isObj, isFunc, isStr, isArr} from '../utils'
+import { isObj, isFunc, isStr, isArr, isEmptyObj, keyIn} from '../utils'
 
 export const beautify = (char: string, level: number = DEFAULTS.LEVEL.INIT, enable = DEFAULTS.BEAUTIFY.ENABLE): string => {
   let str = char;
@@ -31,31 +31,27 @@ export const createEntityHandler = (entityMap: InputData) => {
     str;
 }
 
-export const checkChildTags = (data: InputData, attrKey: string, contentKey: string) => {
-  if(isObj(data) && !isArr(data)) {
-    const dataKeys = Object.keys(data);
-    return Boolean(dataKeys.length && (dataKeys.find((k) => k === contentKey && isObj(data[k])) || dataKeys.some((k) => ![attrKey, contentKey].includes(k))) )
-  } else if(isArr(data)) {
+export const checkNestedTags = (data: InputData, attrKey: string, contentKey: string) => {
+  if(isArr(data)) {
     return Boolean(data.length)
+  } else if(isObj(data)) {
+    const dataKeys = Object.keys(data);
+    return Boolean(dataKeys.length && (dataKeys.find((k) => k === contentKey && isObj(data[k])) || dataKeys.find((k) => ![attrKey, contentKey].includes(k))) )
   }
   return false;
-  // const dataKeys = isObj(data) && !isArr(data)? Object.keys(data) : []
-  // return Boolean(dataKeys.length && (dataKeys.find((k) => k === contentKey && isObj(data[k])) || dataKeys.some((k) => ![attrKey, contentKey].includes(k))) )
-  // return Boolean(isObj(data) && Object.keys(data).length && Object.keys(data).some((key) => ![attrKey, contentKey].includes(key)))
 }
 
 export const createTag = {
   [TAGS.OPENING]: (tagProps: Partial<TagProps>): string => `${beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify)}<${tagProps.name}${setAttributes(tagProps.attributes, tagProps.setEntities)}${!tagProps.selfClosing? '>' : `/>${beautify(DEFAULTS.NEW_LINE, DEFAULTS.LEVEL.INIT, tagProps.beautify)}`}`,
-  [TAGS.CLOSING]: (tagProps: Partial<TagProps>): string => `${tagProps.hasChidTags ? beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify) : DEFAULTS.EMPTY_STR}</${tagProps.name}>${beautify(DEFAULTS.NEW_LINE, DEFAULTS.LEVEL.INIT, tagProps.beautify)}`
-  // [TAGS.SELF_CLOSING]: (tagProps: Partial<TagProps>): string => `${beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify)}<${tagProps.name}${setAttributes(tagProps.attributes, tagProps.setEntities)}/>${beautify(DEFAULTS.NEW_LINE, DEFAULTS.LEVEL.INIT, tagProps.beautify)}`,
+  [TAGS.CLOSING]: (tagProps: Partial<TagProps>): string => `${tagProps.nestedTags ? beautify(DEFAULTS.SPACE, tagProps.level, tagProps.beautify) : DEFAULTS.EMPTY_STR}</${tagProps.name}>${beautify(DEFAULTS.NEW_LINE, DEFAULTS.LEVEL.INIT, tagProps.beautify)}`
 }
 
-export const setStringVal = (inputData: any, doubleQuotes: boolean, setEntities:((str: string) => string) | undefined): string => {
-  let v = isFunc(inputData) ? inputData() : inputData;
-  if (isStr(v)) {
-    v = setEntities && setEntities(v);
+export const setStringVal = (data: any, quotation: boolean, setEntities:((str: string) => string) | undefined): string => {
+  let v = isFunc(data) ? data() : data;
+  if (isStr(v) && setEntities) {
+    v = setEntities(v);
   }
-  return doubleQuotes ? `"${v}"` : `${v}`;
+  return quotation ? `"${v}"` : `${v}`;
 }
 
 export const setAttributes = (attributes: InputData, setEntities:((str: string) => string) | undefined): string => {
@@ -73,4 +69,9 @@ export const setDeclaration = (decAttrs: DeclarationData | void, setEntities: ((
     ...(isObj(decAttrs)? decAttrs : DEFAULTS.DECLARATION)
   } 
   return `<?xml${setAttributes(attrs, setEntities)}?>${beautify(DEFAULTS.NEW_LINE, DEFAULTS.LEVEL.INIT, enableBeautify)}`
+}
+
+//sets value as empty str for (empty obj | falsy values | has only attr in obj)
+export const cleanData = (data: any, lookupKey: string) => {
+  return !data || isEmptyObj(data) || (Object?.keys(data)?.length === 1 && keyIn(data, lookupKey)) ? DEFAULTS.EMPTY_STR : data
 }

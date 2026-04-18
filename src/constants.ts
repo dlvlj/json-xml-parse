@@ -4,7 +4,7 @@ export const TAGS = {
   SELF_CLOSING: 'SELF_CLOSING'
 };
 export const DEFAULTS = {
-  SPACE: '\t',
+  SPACE: '  ',
   NEW_LINE: '\n',
   ATTR_KEY: '@',
   CONTENT_KEY: '#',
@@ -19,7 +19,7 @@ export const DEFAULTS = {
     "'": "&apos;",
     "\"": "&quot;"
   },
-  TYPE_HANDLER: (val: any): [boolean, any] => [true, val],
+  TYPE_HANDLER: (v: any): [boolean, any] => [true, v],
   LEVEL: {
     INIT: 0,
     INCREMENT: 1
@@ -38,9 +38,12 @@ export const DEFAULTS = {
     DISABLE: false
   },
   get EMPTY_OBJ() {
-    return new Object();
+    return {};
   },
   get EMPTY_ARR() {
-    return new Array();
+    return [];
+  },
+  STR: {
+    selfClosing: 'selfClosing'
   }
 }
