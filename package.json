@@ -3,7 +3,7 @@
   "version": "1.3.1",
   "main": "./lib/index.js",
   "type": "commonjs",
-  "license": "MIT",
+  "license": "Unlicense",
   "scripts": {
     "lint": "eslint ./src",
     "build": "tsc",
@@ -26,5 +26,12 @@
     "jest": "^30.3.0",
     "ts-jest": "^29.4.9",
     "typescript": "^4.1.6"
-  }
+  },
+  "files": [
+    "lib/",
+    "package.json",
+    "README.md",
+    "LICENSE.md",
+    "CHANGELOG.md"
+  ]
 }

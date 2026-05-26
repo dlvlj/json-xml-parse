@@ -1,9 +1,0 @@
-node_modules
-src
-build
-test
-.editorconfig
-.eslintrc.js
-.gitignore
-tsconfig.json
-yarn.lock
