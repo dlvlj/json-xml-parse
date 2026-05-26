@@ -3,10 +3,11 @@
   "version": "1.3.1",
   "main": "./lib/index.js",
   "type": "commonjs",
-  "license":"MIT",
+  "license": "MIT",
   "scripts": {
     "lint": "eslint ./src",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest tests"
   },
   "repository": {
     "type": "git",
@@ -18,9 +19,12 @@
     "json-to-xml"
   ],
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@typescript-eslint/eslint-plugin": "^5.60.0",
     "@typescript-eslint/parser": "^5.60.0",
     "eslint": "^8.43.0",
+    "jest": "^30.3.0",
+    "ts-jest": "^29.4.9",
     "typescript": "^4.1.6"
   }
 }
