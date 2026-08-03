@@ -107,7 +107,7 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
 
-  //to compile only "src" not "tests" dir. rootDir changed to "./" above
+  //to compile only "src" not "tests" dir.
   "include": ["src/**/*"],
   "exclude": ["tests/**/*"]
 }

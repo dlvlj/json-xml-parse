@@ -24,6 +24,7 @@ A library for fast JSON to XML transformations.
 ## Usage
 
 ```js
+// import * as parser from 'json-xml-parse';
 const parser = require('json-xml-parse');
 
 const data = {
